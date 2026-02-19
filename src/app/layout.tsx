@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "LuxeInterior - Interior Design Studio",
+  title: "Brightocity Interior",
   description: "We craft timeless interiors that tell your story. Every space deserves to be extraordinary.",
 };
 

@@ -62,7 +62,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-background/10 mt-12 pt-8 text-center text-sm text-background/50">
-          © {new Date().getFullYear()} LuxeInterior. All rights reserved.
+          © {new Date().getFullYear()} Brightocity Interior. All rights reserved.
         </div>
       </div>
     </footer>

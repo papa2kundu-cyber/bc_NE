@@ -239,7 +239,7 @@ function VideoSection() {
       <div className="relative overflow-hidden md:aspect-[16/7.5] aspect-[16/10] shadow-2xl">
         {/* Dummy background image */}
         <video
-          src="/video/Interior_Website_Intro_Video_Generation.mp4"
+          src="/video/Interior_Website_Intro_Video_Generation.MP$"
           autoPlay
           loop
           muted
