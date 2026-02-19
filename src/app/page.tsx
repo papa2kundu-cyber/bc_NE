@@ -493,15 +493,18 @@ function GetInTouchPopup() {
           <div className="space-y-2 text-sm mb-4">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Phone size={14} className="text-primary" />
-              <span>+1 (555) 123-4567</span>
+              <Link href={`tel:9903455451`}>+91 9903455451</Link>
+              <Link href={`tel:9875426319`}>+91 9875426319</Link>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <Mail size={14} className="text-primary" />
-              <span>hello@brightocity.com</span>
+              <Link href={`mailto:brightocityinterior@gmail.com`}>
+                brightocityinterior@gmail.com
+              </Link>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <MapPin size={14} className="text-primary" />
-              <span>123 Design Ave, NY 10001</span>
+              <span>11 no. Rail gate, Hridaypur, Barasat, Kolkata: 700127</span>
             </div>
           </div>
           <Link
@@ -558,7 +561,8 @@ export default function HomePage() {
                 Who We Are
               </span>
               <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6 md:text-left text-center flex flex-col md:flex-row">
-                <strong className="text-[32px] md:text-[38px]">About</strong> <span className="text-primary">Brightocity Interior</span>
+                <strong className="text-[32px] md:text-[38px]">About</strong>{" "}
+                <span className="text-primary">Brightocity Interior</span>
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
                 At Brightocity Interior, we believe that great design is the art

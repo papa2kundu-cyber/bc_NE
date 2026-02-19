@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import logo from "../../public/images/logo.png";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -25,8 +27,9 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
       <div className="container-narrow flex items-center justify-between h-16 md:h-20 px-4 sm:px-6 lg:px-8">
         <Link href="/" className="font-heading text-xl md:text-2xl font-bold tracking-tight">
-          <span className="text-primary">LUXE</span>
-          <span className="text-foreground">INTERIOR</span>
+          {/* <span className="text-primary">LUXE</span>
+          <span className="text-foreground">INTERIOR</span> */}
+          <Image src={logo} alt="Brightocity Interior Logo" width={150} height={40} className="object-contain" />
         </Link>
 
         {/* Desktop Nav */}

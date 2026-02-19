@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
+import Image from "next/image";
+import logo from "../../public/images/logo.png";
+
 
 const Footer = () => {
   return (
     <footer className="bg-foreground text-background">
       <div className="container-narrow section-padding">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          <div>
-            <h3 className="font-heading text-xl font-bold mb-4">
-              <span className="text-primary">LUXE</span>INTERIOR
-            </h3>
+          <div className="flex flex-col gap-4">
+            <Image src={logo} alt="Brightocity Interior Logo" width={200} height={90} className="object-contain" />
             <p className="text-background/70 text-sm leading-relaxed">
               We transform spaces into stunning, functional works of art. Every detail matters in creating your dream environment.
             </p>
@@ -45,15 +46,16 @@ const Footer = () => {
             <div className="space-y-3 text-sm text-background/70">
               <div className="flex items-center gap-2">
                 <Mail size={16} className="text-primary" />
-                <span>hello@luxeinterior.com</span>
+                <Link href={`mailto:brightocityinterior@gmail.com`} >brightocityinterior@gmail.com</Link>
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={16} className="text-primary" />
-                <span>+1 (555) 123-4567</span>
+                <Link href={`tel:9903455451`} >+91 9903455451</Link>
+                <Link href={`tel:9875426319`} >+91 9875426319</Link>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin size={16} className="text-primary" />
-                <span>123 Design Ave, NY 10001</span>
+                <span>11 no. Rail gate, Hridaypur, Barasat, Kolkata: 700127</span>
               </div>
             </div>
           </div>
