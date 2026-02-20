@@ -7,7 +7,8 @@ import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "Brightocity Interior",
-  description: "We craft timeless interiors that tell your story. Every space deserves to be extraordinary.",
+  description:
+    "We craft timeless interiors that tell your story. Every space deserves to be extraordinary.",
 };
 
 export default function RootLayout({
@@ -17,6 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+      </head>
       <body>
         <Providers>
           <TooltipProvider>

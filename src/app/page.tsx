@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ArrowRight,
   // Play,
@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
+import lineGrow from "../../public/images/lineGrow.svg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -520,6 +521,62 @@ function GetInTouchPopup() {
   );
 }
 
+const Counter = ({ endValue, color }: any) => {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const counterRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 1 },
+    );
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
+    }
+
+    return () => {
+      if (counterRef.current) {
+        observer.unobserve(counterRef.current);
+      }
+    };
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    let startTime: any;
+    const duration = 2000; // 2 seconds animation
+
+    const animate = (currentTime: any) => {
+      if (!startTime) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const currentCount = Math.floor(easeOutQuart * endValue);
+
+      setCount(currentCount);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setCount(endValue);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [isVisible, endValue]);
+
+  return <span ref={counterRef}>{count}</span>;
+};
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
@@ -529,105 +586,116 @@ export default function HomePage() {
       <VideoSection />
 
       {/* 2) ABOUT US */}
-      <section className="section-padding bg-muted/30">
-        <div className="container-narrow">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="hidden md:block relative rounded-2xl overflow-hidden aspect-[4/3]"
-            >
-              <Image
-                src="/images/about-team.jpg"
-                alt="About Brightocity Interior"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute bottom-6 left-6 bg-primary text-white rounded-xl px-5 py-3 shadow-lg">
-                <div className="text-3xl font-bold font-heading">15+</div>
-                <div className="text-sm">Years of Excellence</div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-            >
-              <span className="text-primary font-medium text-sm uppercase tracking-widest mb-3 block md:text-left text-center">
-                Who We Are
-              </span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6 md:text-left text-center flex flex-col md:flex-row">
-                <strong className="text-[32px] md:text-[38px]">About</strong>{" "}
-                <span className="text-primary">Brightocity Interior</span>
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                At Brightocity Interior, we believe that great design is the art
-                of bringing harmony to a space. Founded in 2008, we have spent
-                over 15 years creating homes and commercial environments that
-                inspire, comfort, and endure.
-              </p>
-              <p className="text-muted-foreground leading-relaxed mb-6">
-                Our multidisciplinary team of designers, architects, and
-                craftspeople collaborate closely with each client to deliver
-                spaces that are as functional as they are beautiful. We are
-                passionate about every detail — from the perfect shade of paint
-                to the precise placement of furniture.
-              </p>
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                {[
-                  { num: "250+", label: "Projects Done" },
-                  { num: "120+", label: "Happy Clients" },
-                  { num: "18", label: "Awards Won" },
-                  { num: "15+", label: "Years Experience" },
-                ].map((s) => (
-                  <div
-                    key={s.label}
-                    className="bg-card border border-border rounded-lg p-4 text-center"
-                  >
-                    <div className="text-2xl font-bold font-heading text-primary">
-                      {s.num}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {s.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors"
+      <div className="relative bg-[url('/images/reBg.png')] bg-repeat bg-center">
+        <div className="w-full h-full bg-[#ffffffc8] absolute" />
+        <section className="section-padding bg-muted/30 relative z-10">
+          <div className="container-narrow">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <motion.div
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                className="hidden md:block relative rounded-2xl overflow-hidden aspect-[4/3]"
               >
-                Learn More About Us <ArrowRight size={18} />
-              </Link>
-            </motion.div>
+                <Image
+                  src="/images/about-team.jpg"
+                  alt="About Brightocity Interior"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute bottom-6 left-6 bg-primary text-white rounded-xl px-5 py-3 shadow-lg">
+                  <div className="text-3xl font-bold font-heading">15+</div>
+                  <div className="text-sm">Years of Excellence</div>
+                </div>
+              </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="md:hidden block relative rounded-2xl overflow-hidden aspect-[4/3]"
-            >
-              <Image
-                src="/images/about-team.jpg"
-                alt="About Brightocity Interior"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute bottom-6 left-6 bg-primary text-white rounded-xl px-5 py-3 shadow-lg">
-                <div className="text-3xl font-bold font-heading">15+</div>
-                <div className="text-sm">Years of Excellence</div>
-              </div>
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+              >
+                <span className="text-primary font-medium text-sm uppercase tracking-widest mb-3 block md:text-left text-center">
+                  Who We Are
+                </span>
+                <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6 md:text-left text-center flex flex-col md:flex-row">
+                  <strong className="text-[32px] md:text-[38px]">About</strong>
+                  &nbsp;
+                  <span className="text-primary">Brightocity Interior</span>
+                </h2>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  At Brightocity Interior, we believe that great design is the
+                  art of bringing harmony to a space. Founded in 2008, we have
+                  spent over 15 years creating homes and commercial environments
+                  that inspire, comfort, and endure.
+                </p>
+                <p className="text-muted-foreground leading-relaxed mb-6">
+                  Our multidisciplinary team of designers, architects, and
+                  craftspeople collaborate closely with each client to deliver
+                  spaces that are as functional as they are beautiful. We are
+                  passionate about every detail — from the perfect shade of
+                  paint to the precise placement of furniture.
+                </p>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  {[
+                    { num: "250+", label: "Projects Done" },
+                    { num: "120+", label: "Happy Clients" },
+                    { num: "18", label: "Awards Won" },
+                    { num: "15+", label: "Years Experience" },
+                  ].map((s) => (
+                    <div
+                      key={s.label}
+                      className="bg-card border border-border rounded-lg p-4 text-center"
+                    >
+                      <div className="text-2xl font-bold font-heading text-primary">
+                        {s.num}
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {s.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <Link
+                  href="/about"
+                  className="group inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors"
+                >
+                  Learn More About Us{" "}
+                  <ArrowRight
+                    size={18}
+                    className="duration-300 -rotate-45 group-hover:rotate-0"
+                  />
+                </Link>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                className="md:hidden block relative rounded-2xl overflow-hidden aspect-[4/3]"
+              >
+                <Image
+                  src="/images/about-team.jpg"
+                  alt="About Brightocity Interior"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute bottom-6 left-6 bg-primary text-white rounded-xl px-5 py-3 shadow-lg">
+                  <div className="text-3xl font-bold font-heading">15+</div>
+                  <div className="text-sm">Years of Excellence</div>
+                </div>
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
-      {/* 3) PERSONALIZED DESIGNS */}
+      {/* 3) GALLERY (SLIDER TYPE) */}
+      <GallerySlider />
+
+      {/* 4) PERSONALIZED DESIGNS */}
       <section className="section-padding">
         <div className="container-narrow">
           <SectionHeading
@@ -668,7 +736,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4) OUR EXPERTISE */}
+      {/* 5) OUR EXPERTISE */}
       <section className="section-padding">
         <div className="container-narrow">
           <SectionHeading
@@ -685,10 +753,13 @@ export default function HomePage() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                className="flex gap-4 p-6 bg-card rounded-xl border border-border hover:shadow-lg hover:border-primary/30 transition-all group"
+                className="hover:bg-primary/10 flex gap-4 p-6 bg-card rounded-xl border border-border hover:shadow-lg hover:border-primary/30 transition-all group"
               >
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                  <item.icon size={22} className="text-primary" />
+                <div className="w-12 h-12 rounded-lg bg-white group-hover:bg-primary flex items-center justify-center shrink-0 transition-colors">
+                  <item.icon
+                    size={22}
+                    className="text-primary group-hover:text-white"
+                  />
                 </div>
                 <div>
                   <h3 className="font-heading text-lg font-semibold mb-2">
@@ -704,7 +775,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5) WHY CHOOSE US */}
+      {/* 6) WHY CHOOSE US */}
       <section className="section-padding bg-foreground text-background">
         <div className="container-narrow">
           <SectionHeading
@@ -725,7 +796,8 @@ export default function HomePage() {
                 viewport={{ once: true }}
               >
                 <div className="text-4xl font-heading font-bold text-primary">
-                  {s.num}
+                  {/* {s.num} */}
+                  <Counter endValue={parseInt(s.num)} />+
                 </div>
                 <div className="text-background/70 text-sm mt-1">{s.label}</div>
               </motion.div>
@@ -756,9 +828,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6) GALLERY (SLIDER TYPE) */}
-      <GallerySlider />
-
       {/* 7) WORK PROCESS */}
       <section className="section-padding">
         <div className="container-narrow">
@@ -770,6 +839,36 @@ export default function HomePage() {
           <div className="relative">
             {/* Connector line for desktop */}
             <div className="hidden lg:block absolute top-10 left-0 right-0 h-0.5 bg-border z-0" />
+            <motion.div
+              className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
+              animate={{ x: ["0%", "22%"] }}
+              transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+            >
+              <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
+            </motion.div>
+              <motion.div
+              className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
+              animate={{ x: ["20%", "44%"] }}
+              transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+              >
+              <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
+            </motion.div>
+             <motion.div
+              className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
+              animate={{ x: ["42%", "64%"] }}
+              transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+            >
+              <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
+            </motion.div>
+            <motion.div
+              className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
+              animate={{ x: ["63%", "84%"] }}
+              transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+            >
+              <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
+            </motion.div>
+            <div className="hidden lg:block absolute top-5 right-0 w-24 h-10 bg-white z-1" />
+            <div className="hidden lg:block absolute top-5 left-0 w-24 h-10 bg-white z-1" />
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-8 relative z-10">
               {workProcess.map((step, i) => (
                 <motion.div

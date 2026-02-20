@@ -27,7 +27,7 @@ const SectionHeading = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className={`mb-4 ${center ? "text-center" : ""}`}
+      className={`mb-4 ${center ? "text-center" : ""} group`}
     >
       {subtitle && (
         <span
@@ -37,7 +37,7 @@ const SectionHeading = ({
         </span>
       )}
       <h2
-        className={`font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground ${classNameT}`}
+        className={`font-heading text-4xl hover:text-[40px] duration-300 font-bold text-foreground hover:text-shadow-lg/30 ${classNameT}`}
       >
         {title}
       </h2>
