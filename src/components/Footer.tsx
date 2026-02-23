@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer className="bg-foreground text-background">
       <div className="container-narrow section-padding">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           <div className="flex flex-col gap-4">
             <Image
               src={logo}
@@ -21,36 +21,36 @@ const Footer = () => {
               detail matters in creating your dream environment.
             </p>
           </div>
+          <div className="grid grid-cols-2 gap-10">
+            <div>
+              <h4 className="font-heading text-lg font-semibold mb-4">
+                Quick Links
+              </h4>
+              <div className="space-y-2">
+                {["About Us", "Our Works", "Interior", "Blog"].map((item) => (
+                  <Link
+                    key={item}
+                    href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                    className="block text-sm text-background/70 hover:text-primary transition-colors"
+                  >
+                    {item}
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-          <div>
-            <h4 className="font-heading text-lg font-semibold mb-4">
-              Quick Links
-            </h4>
-            <div className="space-y-2">
-              {["About Us", "Our Works", "Interior", "Blog"].map((item) => (
-                <Link
-                  key={item}
-                  href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="block text-sm text-background/70 hover:text-primary transition-colors"
-                >
-                  {item}
-                </Link>
-              ))}
+            <div>
+              <h4 className="font-heading text-lg font-semibold mb-4">
+                Services
+              </h4>
+              <div className="space-y-2 text-sm text-background/70">
+                <p>Residential Design</p>
+                <p>Commercial Spaces</p>
+                <p>Space Planning</p>
+                <p>Color Consultation</p>
+              </div>
             </div>
           </div>
-
-          <div>
-            <h4 className="font-heading text-lg font-semibold mb-4">
-              Services
-            </h4>
-            <div className="space-y-2 text-sm text-background/70">
-              <p>Residential Design</p>
-              <p>Commercial Spaces</p>
-              <p>Space Planning</p>
-              <p>Color Consultation</p>
-            </div>
-          </div>
-
           <div>
             <h4 className="font-heading text-lg font-semibold mb-4">
               Get In Touch

@@ -634,9 +634,8 @@ export default function HomePage() {
                 <span className="text-primary font-medium text-sm uppercase tracking-widest mb-3 block md:text-left text-center">
                   Who We Are
                 </span>
-                <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6 md:text-left text-center flex flex-col md:flex-row">
+                <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6 md:text-left text-center flex flex-col md:flex-row gap-0 md:gap-2">
                   <strong className="text-[32px] md:text-[38px]">About</strong>
-                  &nbsp;
                   <span className="text-primary">Brightocity Interior</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-4">

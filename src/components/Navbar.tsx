@@ -33,20 +33,30 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center gap-1">
+        <div className="relative hidden lg:flex items-center gap-1">
           {navItems.map((item) => (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={`px-3 py-2 text-sm font-medium transition-colors rounded-md ${
-                pathname === item.path
-                  ? "text-primary"
+            item.label === "Contact Us" ? (
+              <Link
+                key={item.path}
+                href={item.path}
+                className="ml-2 px-4 py-2 text-sm font-medium transition-colors rounded-md bg-primary text-white hover:bg-primary/90 relative z-10"
+              >
+                {item.label}
+              </Link>
+            ) :
+
+              <Link
+                key={item.path}
+                href={item.path}
+                className={`px-3 py-2 text-sm font-medium transition-colors rounded-md ${pathname === item.path
+                  ? "text-primary font-semibold"
                   : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {item.label}
-            </Link>
+                  }`}
+              >
+                {item.label}
+              </Link>
           ))}
+          <div className="absolute -bottom-1 right-1 rounded-lg w-[calc(100%_-_85.5%)] h-4 bg-black/30"></div>
         </div>
 
         {/* Mobile Toggle */}
@@ -68,21 +78,30 @@ const Navbar = () => {
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden bg-background border-b border-border overflow-hidden"
           >
-            <div className="px-4 py-4 space-y-1">
-              {navItems.map((item) => (
-                <Link
+            <div className="px-4 py-4 space-y-1 relative">
+              {navItems.map((item, idx) => (
+                item.label === "Contact Us" ? <Link
                   key={item.path}
                   href={item.path}
                   onClick={() => setIsOpen(false)}
-                  className={`block px-3 py-2.5 text-sm font-medium rounded-md transition-colors ${
-                    pathname === item.path
-                      ? "text-primary bg-primary/5"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                  }`}
+                  className={`block px-3 py-2.5 text-sm font-medium rounded-lg transition-colors text-white bg-primary relative z-10`}
+                >
+                  {item.label}
+                </Link> : <Link
+                  key={item.path}
+                  href={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`block px-3 py-2.5 text-sm font-medium rounded-md transition-colors ${pathname === item.path
+                    ? "text-primary bg-primary/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    }`}
                 >
                   {item.label}
                 </Link>
               ))}
+              <div className="absolute bottom-3 left-0 flex justify-center w-full">
+                <div className="rounded-lg w-[calc(100%_-_40px)] h-4 bg-black/30"></div>
+              </div>
             </div>
           </motion.div>
         )}
