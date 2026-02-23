@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import Image from "next/image";
 import { Award, Users, Eye, Heart } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const values = [
   { icon: Eye, title: "Vision", desc: "We see the potential in every space and bring it to life with creativity and precision." },
@@ -12,6 +13,63 @@ const values = [
   { icon: Award, title: "Excellence", desc: "We never settle for ordinary. Quality craftsmanship is in every detail we touch." },
   { icon: Users, title: "Collaboration", desc: "Your input drives our design. We believe the best spaces are co-created." },
 ];
+
+const Counter = ({ endValue, color }: any) => {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const counterRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 1 },
+    );
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
+    }
+
+    return () => {
+      if (counterRef.current) {
+        observer.unobserve(counterRef.current);
+      }
+    };
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    let startTime: any;
+    const duration = 2000; // 2 seconds animation
+
+    const animate = (currentTime: any) => {
+      if (!startTime) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const currentCount = Math.floor(easeOutQuart * endValue);
+
+      setCount(currentCount);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setCount(endValue);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [isVisible, endValue]);
+
+  return <span ref={counterRef}>{count}</span>;
+};
+
 
 export default function AboutPage() {
   return (
@@ -41,15 +99,15 @@ export default function AboutPage() {
             </p>
             <div className="flex gap-8">
               <div>
-                <div className="text-3xl font-heading font-bold text-primary">250+</div>
+                <div className="text-3xl font-heading font-bold text-primary"><Counter endValue={parseInt(`250`)}/>+</div>
                 <div className="text-sm text-muted-foreground">Projects</div>
               </div>
               <div>
-                <div className="text-3xl font-heading font-bold text-primary">15+</div>
+                <div className="text-3xl font-heading font-bold text-primary"><Counter endValue={parseInt(`15`)} />+</div>
                 <div className="text-sm text-muted-foreground">Years</div>
               </div>
               <div>
-                <div className="text-3xl font-heading font-bold text-primary">25+</div>
+                <div className="text-3xl font-heading font-bold text-primary"><Counter endValue={parseInt(`25`)}/>+</div>
                 <div className="text-sm text-muted-foreground">Designers</div>
               </div>
             </div>

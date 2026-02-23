@@ -75,10 +75,10 @@ export default function ContactPage() {
                 <div>
                   <h4 className="font-heading font-semibold">Phone</h4>
                   <Link
-                    href={`tel:9903455451`}
+                    href={`tel:7439133325`}
                     className="text-muted-foreground text-sm whitespace-pre-line"
                   >
-                    +91 9903455451
+                    +91 7439133325
                   </Link>,{" "}
                   <Link
                     href={`tel:9875426319`}

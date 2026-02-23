@@ -29,6 +29,16 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import lineGrow from "../../public/images/lineGrow.svg";
 
+import discovery from "../../public/images/aboutIcon/discovery.svg";
+import concept from "../../public/images/aboutIcon/conceptDesign.svg";
+import material from "../../public/images/aboutIcon/materialSelection.svg";
+import implementation from "../../public/images/aboutIcon/implementation.svg";
+import reveal from "../../public/images/aboutIcon/revealHandover.svg";
+
+import space from "../../public/images/wynis/space.svg";
+import aethetics from "../../public/images/wynis/aethetics.svg";
+import wellbeing from "../../public/images/wynis/wellbeing.svg";
+
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({
@@ -138,26 +148,31 @@ const galleryImages = [
 const workProcess = [
   {
     step: "01",
+    imag: discovery,
     title: "Discovery",
     desc: "We listen to your vision, lifestyle, and goals through an in-depth consultation.",
   },
   {
     step: "02",
+    imag: concept,
     title: "Concept Design",
     desc: "Our team develops mood boards, space plans, and visual concepts for your approval.",
   },
   {
     step: "03",
+    imag: material,
     title: "Material Selection",
     desc: "We source premium materials, furniture, and finishes that match your style.",
   },
   {
     step: "04",
+    imag: implementation,
     title: "Implementation",
     desc: "Our skilled team brings the design to life with precision and care.",
   },
   {
     step: "05",
+    imag: reveal,
     title: "Reveal & Handover",
     desc: "We walk you through your transformed space and ensure your complete satisfaction.",
   },
@@ -170,17 +185,17 @@ const interiorBenefits = [
     desc: "A professionally designed interior can boost your property's market value significantly.",
   },
   {
-    icon: Eye,
+    icon: space,
     title: "Better Use of Space",
     desc: "Expert planning ensures every square metre is utilised to its full potential.",
   },
   {
-    icon: Users,
+    icon: wellbeing,
     title: "Improved Wellbeing",
     desc: "Thoughtfully designed spaces reduce stress and enhance your daily quality of life.",
   },
   {
-    icon: Award,
+    icon: aethetics,
     title: "Cohesive Aesthetic",
     desc: "Professional designers create harmonious spaces that feel intentional and polished.",
   },
@@ -494,7 +509,7 @@ function GetInTouchPopup() {
           <div className="space-y-2 text-sm mb-4">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Phone size={14} className="text-primary" />
-              <Link href={`tel:9903455451`}>+91 9903455451</Link>
+              <Link href={`tel:7439133325`}>+91 7439133325</Link>
               <Link href={`tel:9875426319`}>+91 9875426319</Link>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
@@ -649,7 +664,7 @@ export default function HomePage() {
                       className="bg-card border border-border rounded-lg p-4 text-center"
                     >
                       <div className="text-2xl font-bold font-heading text-primary">
-                        {s.num}
+                        <Counter endValue={parseInt(s.num)} />+
                       </div>
                       <div className="text-xs text-muted-foreground mt-1">
                         {s.label}
@@ -846,20 +861,23 @@ export default function HomePage() {
             >
               <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
             </motion.div>
-              <motion.div
+
+            <motion.div
               className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
               animate={{ x: ["20%", "44%"] }}
               transition={{ duration: 3, ease: "linear", repeat: Infinity }}
-              >
+            >
               <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
             </motion.div>
-             <motion.div
+
+            <motion.div
               className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
               animate={{ x: ["42%", "64%"] }}
               transition={{ duration: 3, ease: "linear", repeat: Infinity }}
             >
               <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
             </motion.div>
+
             <motion.div
               className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
               animate={{ x: ["63%", "84%"] }}
@@ -881,9 +899,11 @@ export default function HomePage() {
                   className="flex flex-col items-center text-center"
                 >
                   <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center mb-4 shadow-lg">
-                    <span className="text-white font-heading font-bold text-lg">
+                    {/* <span className="text-white font-heading font-bold text-lg">
                       {step.step}
-                    </span>
+                    </span> */}
+                    <Image src={step.imag} alt="step" className="w-8 h-8" />
+
                   </div>
                   <h3 className="font-heading text-lg font-semibold mb-2">
                     {step.title}
@@ -932,7 +952,7 @@ export default function HomePage() {
                     className="flex gap-4"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <b.icon size={18} className="text-primary" />
+                      {i === 0 ? <b.icon size={18} className="text-primary" /> : <Image src={b.icon} alt="icon" className="w-5 h-5" />}
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">{b.title}</h3>
