@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin, Facebook, Linkedin } from "lucide-react";
 import Image from "next/image";
-import logo from "../../public/images/logoWhite.png";
+const logo = "/images/logoWhite.png";
 
 const Footer = () => {
   return (

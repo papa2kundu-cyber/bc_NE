@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import logo from "../../public/images/logo.png";
+const logo = "/images/logo.png";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -34,6 +34,13 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         <div className="relative hidden lg:flex items-center gap-1">
+          {/* <Link
+            href="/admin"
+            className="px-3 py-2 text-xs font-medium text-muted-foreground/60 hover:text-primary transition-colors rounded-md"
+            title="Admin Panel"
+          >
+            Admin
+          </Link> */}
           {navItems.map((item) => (
             item.label === "Contact Us" ? (
               <Link

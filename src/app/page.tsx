@@ -27,17 +27,17 @@ import {
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
-import lineGrow from "../../public/images/lineGrow.svg";
+const lineGrow = "/images/lineGrow.svg";
 
-import discovery from "../../public/images/aboutIcon/discovery.svg";
-import concept from "../../public/images/aboutIcon/conceptDesign.svg";
-import material from "../../public/images/aboutIcon/materialSelection.svg";
-import implementation from "../../public/images/aboutIcon/implementation.svg";
-import reveal from "../../public/images/aboutIcon/revealHandover.svg";
+const discovery = "/images/aboutIcon/discovery.svg";
+const concept = "/images/aboutIcon/conceptDesign.svg";
+const material = "/images/aboutIcon/materialSelection.svg";
+const implementation = "/images/aboutIcon/implementation.svg";
+const reveal = "/images/aboutIcon/revealHandover.svg";
 
-import space from "../../public/images/wynis/space.svg";
-import aethetics from "../../public/images/wynis/aethetics.svg";
-import wellbeing from "../../public/images/wynis/wellbeing.svg";
+const space = "/images/wynis/space.svg";
+const aethetics = "/images/wynis/aethetics.svg";
+const wellbeing = "/images/wynis/wellbeing.svg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -858,7 +858,7 @@ export default function HomePage() {
               animate={{ x: ["0%", "22%"] }}
               transition={{ duration: 3, ease: "linear", repeat: Infinity }}
             >
-              <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
+              <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
             </motion.div>
 
             <motion.div
@@ -866,7 +866,7 @@ export default function HomePage() {
               animate={{ x: ["20%", "44%"] }}
               transition={{ duration: 3, ease: "linear", repeat: Infinity }}
             >
-              <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
+              <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
             </motion.div>
 
             <motion.div
@@ -874,7 +874,7 @@ export default function HomePage() {
               animate={{ x: ["42%", "64%"] }}
               transition={{ duration: 3, ease: "linear", repeat: Infinity }}
             >
-              <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
+              <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
             </motion.div>
 
             <motion.div
@@ -882,7 +882,7 @@ export default function HomePage() {
               animate={{ x: ["63%", "84%"] }}
               transition={{ duration: 3, ease: "linear", repeat: Infinity }}
             >
-              <Image src={lineGrow} alt="lineGrow" className="h-0.5 w-auto" />
+              <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
             </motion.div>
             <div className="hidden lg:block absolute top-5 right-0 w-24 h-10 bg-white z-1" />
             <div className="hidden lg:block absolute top-5 left-0 w-24 h-10 bg-white z-1" />
@@ -895,13 +895,14 @@ export default function HomePage() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
+
                   className="flex flex-col items-center text-center"
                 >
                   <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center mb-4 shadow-lg">
                     {/* <span className="text-white font-heading font-bold text-lg">
                       {step.step}
                     </span> */}
-                    <Image src={step.imag} alt="step" className="w-8 h-8" />
+                    <Image src={step.imag} width={100} height={100} alt="step" className="w-8 h-8" />
 
                   </div>
                   <h3 className="font-heading text-lg font-semibold mb-2">
@@ -940,7 +941,7 @@ export default function HomePage() {
                 your mood, productivity, and overall quality of life.
               </p>
               <div className="space-y-5">
-                {interiorBenefits.map((b, i) => (
+                {interiorBenefits.map((b: any, i) => (
                   <motion.div
                     key={b.title}
                     custom={i}
@@ -951,7 +952,7 @@ export default function HomePage() {
                     className="flex gap-4"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      {i === 0 ? <b.icon size={18} className="text-primary" /> : <Image src={b.icon} alt="icon" className="w-5 h-5" />}
+                      {i === 0 ? <b.icon size={18} className="text-primary" /> : <Image src={b?.icon} alt="icon" width={100} height={100} className="w-5 h-5" />}
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">{b.title}</h3>

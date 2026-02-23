@@ -1,7 +1,7 @@
 // Asset re-exports for convenience
-export { default as heroImg } from './hero-living.jpg';
-export { default as bedroomImg } from './interior-bedroom.jpg';
-export { default as kitchenImg } from './interior-kitchen.jpg';
-export { default as bathroomImg } from './interior-bathroom.jpg';
-export { default as officeImg } from './interior-office.jpg';
-export { default as teamImg } from './about-team.jpg';
+export const heroImg = '/images/hero-living.jpg';
+export const bedroomImg = '/images/interior-bedroom.jpg';
+export const kitchenImg = '/images/interior-kitchen.jpg';
+export const bathroomImg = '/images/interior-bathroom.jpg';
+export const officeImg = '/images/interior-office.jpg';
+export const teamImg = '/images/about-team.jpg';
