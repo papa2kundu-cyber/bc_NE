@@ -10,7 +10,10 @@ export type AdminProfile = {
   phone: string;
   role: string;
   avatarInitial: string; // derived from name
+  avatar: string;        // base64 profile picture (empty = use initial)
 };
+
+const AVATAR_KEY = "brightocity_admin_avatar";
 
 // Single mutable object – lives for the lifetime of the browser session.
 export const adminProfile: AdminProfile = {
@@ -20,12 +23,28 @@ export const adminProfile: AdminProfile = {
   phone: "+1 555-0100",
   role: "Super Administrator",
   avatarInitial: "A",
+  avatar: "",
 };
 
 export function updateAdminProfile(patch: Partial<Omit<AdminProfile, "avatarInitial">>) {
   Object.assign(adminProfile, patch);
   if (patch.name) {
     adminProfile.avatarInitial = patch.name.trim().charAt(0).toUpperCase() || "A";
+  }
+  if (patch.avatar !== undefined) {
+    // Persist avatar across page refreshes via localStorage
+    if (typeof window !== "undefined") {
+      if (patch.avatar) localStorage.setItem(AVATAR_KEY, patch.avatar);
+      else localStorage.removeItem(AVATAR_KEY);
+    }
+  }
+}
+
+/** Load persisted avatar from localStorage into adminProfile (call once on app start). */
+export function loadPersistedAvatar() {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem(AVATAR_KEY);
+    if (saved) adminProfile.avatar = saved;
   }
 }
 

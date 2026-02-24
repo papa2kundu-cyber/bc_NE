@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { seedReviews, type Review } from "@/lib/adminStore";
-import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import { useState, useEffect } from "react";
+import { type Review } from "@/lib/adminStore";
+import { getReviews, persistReviews } from "@/lib/reviewStore";
 import AdminTable, { Column } from "@/components/admin/AdminTable";
 import AdminModal from "@/components/admin/AdminModal";
 import { FormField, Input, Textarea, FormActions } from "@/components/admin/FormField";
-import { Star, X, ImageIcon } from "lucide-react";
+import { Star, X, ImageIcon, Send } from "lucide-react";
 
 const emptyForm: Omit<Review, "id"> = {
   name: "",
@@ -15,6 +15,7 @@ const emptyForm: Omit<Review, "id"> = {
   rating: 5,
   description: "",
   images: [],
+  allowed: true,
 };
 
 function StarRating({ value, onChange }: { value: number; onChange: (v: number) => void }) {
@@ -25,9 +26,10 @@ function StarRating({ value, onChange }: { value: number; onChange: (v: number) 
           key={star}
           type="button"
           onClick={() => onChange(star)}
-          className={`transition-colors ${star <= value ? "text-yellow-400" : "text-muted hover:text-yellow-300"}`}
+          className="transition-colors"
+          style={{ color: star <= value ? "#dd7139" : "#e5e7eb" }} // #e5e7eb is text-muted / gray-200
         >
-          <Star size={22} fill={star <= value ? "currentColor" : "none"} />
+          <Star size={22} fill={star <= value ? "#dd7139" : "none"} />
         </button>
       ))}
       <span className="ml-2 text-sm text-muted-foreground">{value} / 5</span>
@@ -35,12 +37,56 @@ function StarRating({ value, onChange }: { value: number; onChange: (v: number) 
   );
 }
 
+function buildRatingLink(name: string, email: string): string {
+  const base = typeof window !== "undefined" ? window.location.origin : "";
+  const params = new URLSearchParams({ name, email });
+  return `${base}/rate?${params.toString()}`;
+}
+
+function dispatchRatingEmail(name: string, email: string) {
+  const link = buildRatingLink(name, email);
+  const subject = encodeURIComponent("We'd love your feedback — Rate Your Experience");
+  const body = encodeURIComponent(
+    `Hi ${name},\n\nThank you for choosing us! We hope you had a wonderful experience.\n\nWe'd love to hear your thoughts. Please take a moment to share your rating using the link below:\n\n${link}\n\nYour feedback means a lot to us.\n\nWarm regards,\nBrightocity Interior`
+  );
+  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+}
+
+const emptySendForm = { name: "", email: "" };
+
 export default function ReviewsPage() {
-  const [reviews, setReviews] = useState<Review[]>(seedReviews);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<Review | null>(null);
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm]: any = useState(emptyForm);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  // Send rating link modal
+  const [sendModalOpen, setSendModalOpen] = useState(false);
+  const [sendForm, setSendForm] = useState(emptySendForm);
+
+  const toggleAllowed = (id: string) => {
+    setReviews((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, allowed: !r.allowed } : r))
+    );
+  };
+
+  const handleSendLink = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatchRatingEmail(sendForm.name, sendForm.email);
+    setSendModalOpen(false);
+    setSendForm(emptySendForm);
+  };
+
+  // Load from localStorage on mount (includes customer-submitted reviews)
+  useEffect(() => {
+    setReviews(getReviews());
+  }, []);
+
+  // Sync to localStorage whenever reviews change
+  useEffect(() => {
+    if (reviews.length > 0) persistReviews(reviews);
+  }, [reviews]);
 
   const openAdd = () => {
     setEditItem(null);
@@ -104,6 +150,30 @@ export default function ReviewsPage() {
 
   const columns: Column<Review>[] = [
     {
+      key: "allowed",
+      label: "Status",
+      render: (row) => (
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            role="switch"
+            aria-checked={row.allowed}
+            onClick={() => toggleAllowed(row.id)}
+            className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${row.allowed ? "bg-green-500" : "bg-gray-300"
+              }`}
+          >
+            <span
+              className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow transform transition-transform duration-200 ${row.allowed ? "translate-x-4" : "translate-x-0"
+                }`}
+            />
+          </button>
+          <span className={`text-xs font-medium ${row.allowed ? "text-green-600" : "text-gray-400"}`}>
+            {row.allowed ? "Allowed" : "Hidden"}
+          </span>
+        </div>
+      ),
+    },
+    {
       key: "name",
       label: "Reviewer",
       render: (row) => (
@@ -122,8 +192,8 @@ export default function ReviewsPage() {
             <Star
               key={s}
               size={13}
-              className={s <= row.rating ? "text-yellow-400" : "text-muted"}
-              fill={s <= row.rating ? "currentColor" : "none"}
+              style={{ color: s <= row.rating ? "#dd7139" : "#e5e7eb" }}
+              fill={s <= row.rating ? "#dd7139" : "none"}
             />
           ))}
         </div>
@@ -133,7 +203,7 @@ export default function ReviewsPage() {
       key: "description",
       label: "Review",
       render: (row) => (
-        <span className="line-clamp-1 max-w-xs text-muted-foreground text-sm">{row.description}</span>
+        <span className="line-clamp-1 max-w-xs text-muted-foreground text-sm">{row.description.slice(0, 20) + (row.description?.length > 20 ? `...` : ``)}</span>
       ),
     },
     {
@@ -160,12 +230,28 @@ export default function ReviewsPage() {
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
-      <AdminPageHeader
-        title="Reviews"
-        description="Manage customer reviews and testimonials."
-        onAdd={openAdd}
-        addLabel="Add Review"
-      />
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-heading font-bold text-foreground">Reviews</h1>
+          <p className="text-sm text-muted-foreground mt-1">Manage customer reviews and testimonials.</p>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={() => { setSendForm(emptySendForm); setSendModalOpen(true); }}
+            className="flex items-center gap-2 border border-border hover:bg-muted text-foreground px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+          >
+            <Send size={15} />
+            Send Review Link
+          </button>
+          <button
+            onClick={openAdd}
+            className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm"
+          >
+            + Add Review
+          </button>
+        </div>
+      </div>
 
       <AdminTable
         columns={columns}
@@ -183,7 +269,7 @@ export default function ReviewsPage() {
         size="lg"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="Name" required>
               <Input
                 value={form.name}
@@ -271,6 +357,53 @@ export default function ReviewsPage() {
           </FormField>
 
           <FormActions onCancel={() => setModalOpen(false)} isEdit={!!editItem} />
+        </form>
+      </AdminModal>
+
+      {/* Send Review Link Modal */}
+      <AdminModal
+        title="Send Review Link"
+        isOpen={sendModalOpen}
+        onClose={() => setSendModalOpen(false)}
+        size="sm"
+      >
+        <p className="text-sm text-muted-foreground mb-4">
+          Enter the customer's name and email. They'll receive a personalised link to submit their review.
+        </p>
+        <form onSubmit={handleSendLink} className="space-y-4">
+          <FormField label="Customer Name" required>
+            <Input
+              value={sendForm.name}
+              onChange={(e) => setSendForm((f) => ({ ...f, name: e.target.value }))}
+              placeholder="e.g. John Smith"
+              required
+            />
+          </FormField>
+          <FormField label="Customer Email" required>
+            <Input
+              type="email"
+              value={sendForm.email}
+              onChange={(e) => setSendForm((f) => ({ ...f, email: e.target.value }))}
+              placeholder="e.g. john@example.com"
+              required
+            />
+          </FormField>
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setSendModalOpen(false)}
+              className="px-4 py-2 text-sm font-medium rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary hover:bg-primary/90 text-white transition-colors"
+            >
+              <Send size={14} />
+              Send Link
+            </button>
+          </div>
         </form>
       </AdminModal>
 

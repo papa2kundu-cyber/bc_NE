@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ReactNode } from "react";
 
 interface SectionHeadingProps {
   subtitle?: string;
-  title: string;
+  title: string | ReactNode;
   description?: string;
   center?: boolean;
   classNameT?: string;

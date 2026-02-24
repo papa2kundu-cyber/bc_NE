@@ -99,14 +99,18 @@ export default function PhotosPage() {
         ),
     },
     { key: "title", label: "Title" },
-    { key: "category", label: "Category", render: (row) => (
-      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
-        {row.category}
-      </span>
-    )},
-    { key: "description", label: "Description", render: (row) => (
-      <span className="line-clamp-1 max-w-xs text-muted-foreground">{row.description}</span>
-    )},
+    {
+      key: "category", label: "Category", render: (row) => (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+          {row.category}
+        </span>
+      )
+    },
+    {
+      key: "description", label: "Description", render: (row) => (
+        <span className="line-clamp-1 text-muted-foreground">{row.description.slice(0, 20) + (row.description?.length > 20 ? `...` : ``)}</span>
+      )
+    },
   ];
 
   return (

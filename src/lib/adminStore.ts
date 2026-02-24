@@ -48,6 +48,7 @@ export type Review = {
   rating: number; // 1–5
   description: string;
   images: string[]; // max 5
+  allowed: boolean; // whether the review is publicly visible
 };
 
 export type ContactMessage = {
@@ -88,8 +89,8 @@ export const seedFAQs: FAQ[] = [
 ];
 
 export const seedReviews: Review[] = [
-  { id: "1", name: "Emily Ross", email: "emily@example.com", phone: "555-0101", rating: 5, description: "Absolutely transformed our home. Highly recommend!", images: [] },
-  { id: "2", name: "David Kim", email: "david@example.com", phone: "555-0102", rating: 4, description: "Professional and creative team.", images: [] },
+  { id: "1", name: "Emily Ross", email: "emily@example.com", phone: "555-0101", rating: 5, description: "Absolutely transformed our home. Highly recommend!", images: [], allowed: true },
+  { id: "2", name: "David Kim", email: "david@example.com", phone: "555-0102", rating: 4, description: "Professional and creative team.", images: [], allowed: true },
 ];
 
 export const seedContacts: ContactMessage[] = [
