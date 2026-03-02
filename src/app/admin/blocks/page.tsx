@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { seedBlocks, type Block } from "@/lib/adminStore";
+import { useState, useRef } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { blogService } from "@/services";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminTable, { Column } from "@/components/admin/AdminTable";
 import AdminModal from "@/components/admin/AdminModal";
 import { FormField, Input, Textarea, Select, FormActions } from "@/components/admin/FormField";
-import { FileText } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
 
 const CATEGORIES = [
   { value: "Design Trends", label: "Design Trends" },
@@ -17,76 +18,98 @@ const CATEGORIES = [
   { value: "Other", label: "Other" },
 ];
 
-const emptyForm: Omit<Block, "id"> = {
+const emptyForm = {
+  category_id: "1",
   title: "",
-  category: "Design Trends",
   description: "",
   username: "",
-  publishDate: new Date().toISOString().split("T")[0],
-  image: "",
+  publish_date: new Date().toISOString().split("T")[0],
 };
+type BlogRow = Awaited<ReturnType<typeof blogService.getAllBlogs>>[0];
 
 export default function BlocksPage() {
-  const [blocks, setBlocks] = useState<Block[]>(seedBlocks);
+  const qc = useQueryClient();
+  const fileRef = useRef<HTMLInputElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editItem, setEditItem] = useState<Block | null>(null);
+  const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyForm);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const openAdd = () => {
-    setEditItem(null);
+  const { data: blocks = [], isLoading } = useQuery({
+    queryKey: ["blogs"],
+    queryFn: blogService.getAllBlogs,
+  });
+
+  const addMutation = useMutation({
+    mutationFn: blogService.addBlog,
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["blogs"] }); closeModal(); },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Parameters<typeof blogService.editBlog>[1] }) =>
+      blogService.editBlog(id, data),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["blogs"] }); closeModal(); },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => blogService.deleteBlog(id),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["blogs"] }); setDeleteId(null); },
+  });
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setEditId(null);
     setForm(emptyForm);
+    setImageFile(null);
     setImagePreview("");
-    setModalOpen(true);
+    if (fileRef.current) fileRef.current.value = "";
   };
 
-  const openEdit = (block: Block) => {
-    setEditItem(block);
+  const openAdd = () => { setEditId(null); setForm(emptyForm); setImagePreview(""); setImageFile(null); setModalOpen(true); };
+
+  const openEdit = (block: BlogRow) => {
+    setEditId(block.id);
     setForm({
+      category_id: String(block.category_id ?? "1"),
       title: block.title,
-      category: block.category,
-      description: block.description,
-      username: block.username,
-      publishDate: block.publishDate,
-      image: block.image,
+      description: block.description ?? "",
+      username: block.username ?? "",
+      publish_date: block.publish_date ?? new Date().toISOString().split("T")[0],
     });
-    setImagePreview(block.image);
+    setImagePreview(block.image ?? "");
+    setImageFile(null);
     setModalOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (deleteId) {
-      setBlocks((prev) => prev.filter((b) => b.id !== deleteId));
-      setDeleteId(null);
-    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setImagePreview(result);
-      setForm((f) => ({ ...f, image: result }));
-    };
-    reader.readAsDataURL(file);
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editItem) {
-      setBlocks((prev) =>
-        prev.map((b) => (b.id === editItem.id ? { ...b, ...form } : b))
-      );
+    const payload = {
+      category_id: form.category_id,
+      title: form.title,
+      description: form.description,
+      username: form.username,
+      publish_date: form.publish_date,
+      ...(imageFile ? { image: imageFile } : {}),
+    };
+    if (editId !== null) {
+      updateMutation.mutate({ id: editId, data: payload });
     } else {
-      setBlocks((prev) => [...prev, { ...form, id: Date.now().toString() }]);
+      addMutation.mutate(payload);
     }
-    setModalOpen(false);
   };
 
-  const columns: Column<Block>[] = [
+  const isPending = addMutation.isPending || updateMutation.isPending;
+
+  const columns: Column<BlogRow>[] = [
     {
       key: "image",
       label: "Image",
@@ -101,120 +124,69 @@ export default function BlocksPage() {
     },
     { key: "title", label: "Title" },
     {
-      key: "category",
+      key: "category_id",
       label: "Category",
       render: (row) => (
         <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
-          {row.category}
+          {row.category_id}
         </span>
       ),
     },
     { key: "username", label: "Author" },
-    { key: "publishDate", label: "Published" },
+    { key: "publish_date", label: "Published" },
   ];
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
-      <AdminPageHeader
-        title="Blocks (Blog Posts)"
-        description="Create and manage blog content blocks."
-        onAdd={openAdd}
-        addLabel="Add Block"
-      />
+      <AdminPageHeader title="Blocks (Blog Posts)" description="Create and manage blog content blocks." onAdd={openAdd} addLabel="Add Block" />
 
-      <AdminTable
-        columns={columns}
-        data={blocks}
-        onEdit={openEdit}
-        onDelete={(id) => setDeleteId(id)}
-        emptyMessage="No blocks yet. Click 'Add Block' to get started."
-      />
+      {isLoading ? (
+        <div className="flex items-center justify-center py-16 text-muted-foreground gap-2">
+          <Loader2 size={18} className="animate-spin" /> Loading blocks…
+        </div>
+      ) : (
+        <AdminTable columns={columns} data={blocks} onEdit={openEdit} onDelete={(id) => setDeleteId(Number(id))} emptyMessage="No blocks yet. Click 'Add Block' to get started." />
+      )}
 
-      {/* Add / Edit Modal */}
-      <AdminModal
-        title={editItem ? "Edit Block" : "Add New Block"}
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        size="lg"
-      >
+      <AdminModal title={editId !== null ? "Edit Block" : "Add New Block"} isOpen={modalOpen} onClose={closeModal} size="lg">
         <form onSubmit={handleSubmit} className="space-y-4">
           <FormField label="Title" required>
-            <Input
-              value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-              placeholder="e.g. Top Interior Trends 2025"
-              required
-            />
+            <Input value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="e.g. Top Interior Trends 2025" required />
           </FormField>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="Category" required>
-              <Select
-                options={CATEGORIES}
-                value={form.category}
-                onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-              />
+              <Select options={CATEGORIES} value={form.category_id} onChange={(e) => setForm((f) => ({ ...f, category_id: e.target.value }))} />
             </FormField>
-
             <FormField label="Author / Username" required>
-              <Input
-                value={form.username}
-                onChange={(e) => setForm((f) => ({ ...f, username: e.target.value }))}
-                placeholder="e.g. Admin"
-                required
-              />
+              <Input value={form.username} onChange={(e) => setForm((f) => ({ ...f, username: e.target.value }))} placeholder="e.g. Admin" required />
             </FormField>
           </div>
-
           <FormField label="Publish Date" required>
-            <Input
-              type="date"
-              value={form.publishDate}
-              onChange={(e) => setForm((f) => ({ ...f, publishDate: e.target.value }))}
-              required
-            />
+            <Input type="date" value={form.publish_date} onChange={(e) => setForm((f) => ({ ...f, publish_date: e.target.value }))} required />
           </FormField>
-
           <FormField label="Description" required>
-            <Textarea
-              rows={5}
-              value={form.description}
-              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              placeholder="Write the block content here..."
-              required
-            />
+            <Textarea rows={5} value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} placeholder="Write the block content here..." required />
           </FormField>
-
           <FormField label="Cover Image" hint="Upload a cover image (JPG, PNG, WebP).">
             <div className="space-y-2">
-              <Input type="file" accept="image/*" onChange={handleImageChange} className="cursor-pointer" />
-              {imagePreview && (
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-full h-40 object-cover rounded-lg border border-border"
-                />
-              )}
+              <Input ref={fileRef} type="file" accept="image/*" onChange={handleImageChange} className="cursor-pointer" />
+              {imagePreview && <img src={imagePreview} alt="Preview" className="w-full h-40 object-cover rounded-lg border border-border" />}
             </div>
           </FormField>
-
-          <FormActions onCancel={() => setModalOpen(false)} isEdit={!!editItem} />
+          {(addMutation.isError || updateMutation.isError) && (
+            <p className="text-sm text-destructive">Failed to save block. Please try again.</p>
+          )}
+          <FormActions onCancel={closeModal} isEdit={editId !== null} isLoading={isPending} />
         </form>
       </AdminModal>
 
-      {/* Delete Confirm */}
-      <AdminModal
-        title="Confirm Delete"
-        isOpen={!!deleteId}
-        onClose={() => setDeleteId(null)}
-        size="sm"
-      >
-        <p className="text-muted-foreground text-sm">
-          Are you sure you want to delete this block? This action cannot be undone.
-        </p>
+      <AdminModal title="Confirm Delete" isOpen={deleteId !== null} onClose={() => setDeleteId(null)} size="sm">
+        <p className="text-muted-foreground text-sm">Are you sure you want to delete this block? This action cannot be undone.</p>
         <div className="flex items-center justify-end gap-3 mt-6">
           <button onClick={() => setDeleteId(null)} className="px-4 py-2 text-sm font-medium rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors">Cancel</button>
-          <button onClick={confirmDelete} className="px-4 py-2 text-sm font-medium rounded-lg bg-destructive hover:bg-destructive/90 text-white transition-colors">Delete</button>
+          <button onClick={() => deleteId !== null && deleteMutation.mutate(deleteId)} disabled={deleteMutation.isPending} className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-destructive hover:bg-destructive/90 text-white transition-colors disabled:opacity-60">
+            {deleteMutation.isPending && <Loader2 size={14} className="animate-spin" />} Delete
+          </button>
         </div>
       </AdminModal>
     </div>

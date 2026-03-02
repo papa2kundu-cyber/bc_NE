@@ -7,6 +7,7 @@ import {
   Loader2, ArrowLeft, CheckCircle2, RefreshCw, ShieldCheck,
 } from "lucide-react";
 import { adminProfile, updateAdminProfile, generateOTP } from "@/lib/adminAuth";
+import { authService } from "@/services";
 
 // ─── step types ───────────────────────────────────────────────────────────────
 type Step = "login" | "forgot-email" | "forgot-otp" | "forgot-newpw" | "forgot-done";
@@ -78,13 +79,17 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(""); setLoading(true);
-    await simulate();
-    if (email.trim() === adminProfile.email && password === adminProfile.password) {
+    try {
+      await authService.login({ email, password });
       onLogin();
-    } else {
-      setLoading(false);
-      setError("Invalid email or password. Please try again.");
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } }).response?.data?.message ??
+        "Invalid email or password. Please try again.";
+      setError(msg);
       triggerShake();
+    } finally {
+      setLoading(false);
     }
   };
 

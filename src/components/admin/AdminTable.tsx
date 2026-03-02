@@ -8,16 +8,16 @@ export type Column<T> = {
   render?: (row: T) => React.ReactNode;
 };
 
-interface AdminTableProps<T extends { id: string }> {
+interface AdminTableProps<T extends { id: string | number }> {
   columns: Column<T>[];
   data: T[];
   onEdit: (row: T) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: string | number) => void;
   emptyMessage?: string;
   extraActions?: (row: T) => React.ReactNode;
 }
 
-export default function AdminTable<T extends { id: string }>({
+export default function AdminTable<T extends { id: string | number }>({
   columns,
   data,
   onEdit,

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import AdminLogin from "@/components/admin/AdminLogin";
 import { adminProfile, loadPersistedAvatar } from "@/lib/adminAuth";
+import { getAuthToken, clearAuthToken, getStoredUser, clearStoredUser, StoredUser } from "@/lib/axios";
 
 const sidebarItems = [
   { label: "Dashboard", path: "/admin", icon: LayoutDashboard },
@@ -25,6 +26,7 @@ const sidebarItems = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [displayUser, setDisplayUser] = useState<StoredUser | null>(null);
   // Desktop: open = expanded (w-64), closed = icon-only (w-16)
   // Mobile: open = overlay visible, closed = off-screen
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -33,6 +35,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [avatarSrc, setAvatarSrc] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+
+  // Auto-login: restore session from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== "undefined" && getAuthToken()) {
+      setIsLoggedIn(true);
+      setDisplayUser(getStoredUser());
+    }
+  }, []);
 
   // Initialise sidebar: open on desktop, closed on mobile
   useEffect(() => {
@@ -65,9 +75,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // Re-render when profile page updates adminProfile in place
   useEffect(() => { forceRender((n) => n + 1); }, [isLoggedIn]);
 
+  const handleLogout = () => {
+    clearAuthToken();
+    clearStoredUser();
+    setIsLoggedIn(false);
+    setDisplayUser(null);
+    setDropdownOpen(false);
+  };
+
   if (!isLoggedIn) {
-    return <AdminLogin onLogin={() => setIsLoggedIn(true)} />;
+    return <AdminLogin onLogin={() => { setIsLoggedIn(true); setDisplayUser(getStoredUser()); }} />;
   }
+
+  const displayName = displayUser?.name ?? adminProfile.name;
+  const displayEmail = displayUser?.email ?? adminProfile.email;
+  const displayRole = displayUser?.role ?? adminProfile.role;
+  const avatarInitial = displayName[0]?.toUpperCase() ?? "A";
 
   const currentSection =
     pathname === "/admin"
@@ -158,7 +181,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </span>
           </Link>
           <button
-            onClick={() => setIsLoggedIn(false)}
+            onClick={handleLogout}
             title={!sidebarOpen ? "Log Out" : undefined}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
           >
@@ -209,11 +232,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center text-white text-sm font-bold select-none flex-shrink-0 overflow-hidden">
                 {avatarSrc
                   ? <img src={avatarSrc} alt="avatar" className="w-full h-full object-cover" />
-                  : adminProfile.avatarInitial}
+                  : avatarInitial}
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-xs font-semibold text-foreground leading-tight">{adminProfile.name}</p>
-                <p className="text-[10px] text-muted-foreground leading-tight truncate max-w-[120px]">{adminProfile.role}</p>
+                <p className="text-xs font-semibold text-foreground leading-tight">{displayName}</p>
+                <p className="text-[10px] text-muted-foreground leading-tight truncate max-w-[120px]">{displayRole}</p>
               </div>
               <ChevronRight size={13} className={`text-muted-foreground transition-transform duration-200 ${dropdownOpen ? "rotate-90" : ""}`} />
             </button>
@@ -227,11 +250,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-sm flex-shrink-0 overflow-hidden">
                       {avatarSrc
                         ? <img src={avatarSrc} alt="avatar" className="w-full h-full object-cover" />
-                        : adminProfile.avatarInitial}
+                        : avatarInitial}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-foreground truncate">{adminProfile.name}</p>
-                      <p className="text-xs text-muted-foreground truncate">{adminProfile.email}</p>
+                      <p className="text-sm font-semibold text-foreground truncate">{displayName}</p>
+                      <p className="text-xs text-muted-foreground truncate">{displayEmail}</p>
                     </div>
                   </div>
                 </div>
@@ -247,7 +270,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </div>
                 <div className="border-t border-border py-1">
                   <button
-                    onClick={() => { setDropdownOpen(false); setIsLoggedIn(false); }}
+                    onClick={handleLogout}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/10 transition-colors"
                   >
                     <LogOut size={15} />

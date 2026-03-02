@@ -1,97 +1,102 @@
 "use client";
 
-import { useState } from "react";
-import { seedPhotos, type Photo } from "@/lib/adminStore";
+import { useState, useRef } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { photoService } from "@/services";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminTable, { Column } from "@/components/admin/AdminTable";
 import AdminModal from "@/components/admin/AdminModal";
 import { FormField, Input, Textarea, Select, FormActions } from "@/components/admin/FormField";
-import { ImageIcon } from "lucide-react";
+import { ImageIcon, Loader2 } from "lucide-react";
 
 const CATEGORIES = [
-  { value: "Living Room", label: "Living Room" },
-  { value: "Bedroom", label: "Bedroom" },
-  { value: "Kitchen", label: "Kitchen" },
-  { value: "Bathroom", label: "Bathroom" },
-  { value: "Office", label: "Office" },
-  { value: "Dining Room", label: "Dining Room" },
-  { value: "Other", label: "Other" },
+  { value: "1", label: "Living Room" },
+  { value: "2", label: "Bedroom" },
+  { value: "3", label: "Kitchen" },
+  { value: "4", label: "Bathroom" },
+  { value: "5", label: "Office" },
+  { value: "6", label: "Dining Room" },
+  { value: "7", label: "Other" },
 ];
 
-const emptyForm: Omit<Photo, "id"> = {
-  title: "",
-  category: "Living Room",
-  description: "",
-  image: "",
-};
+const emptyForm = { category_id: "1", title: "", description: "" };
+type PhotoRow = Awaited<ReturnType<typeof photoService.getAllPhotos>>[0];
 
 export default function PhotosPage() {
-  const [photos, setPhotos] = useState<Photo[]>(seedPhotos);
+  const qc = useQueryClient();
+  const fileRef = useRef<HTMLInputElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editItem, setEditItem] = useState<Photo | null>(null);
+  const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyForm);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const openAdd = () => {
-    setEditItem(null);
+  const { data: photos = [], isLoading } = useQuery({
+    queryKey: ["photos"],
+    queryFn: photoService.getAllPhotos,
+  });
+
+  const addMutation = useMutation({
+    mutationFn: photoService.addPhoto,
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["photos"] }); closeModal(); },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Parameters<typeof photoService.updatePhoto>[1] }) =>
+      photoService.updatePhoto(id, data),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["photos"] }); closeModal(); },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => photoService.deletePhoto(id),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["photos"] }); setDeleteId(null); },
+  });
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setEditId(null);
     setForm(emptyForm);
+    setImageFile(null);
     setImagePreview("");
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
+  const openAdd = () => { setEditId(null); setForm(emptyForm); setImagePreview(""); setImageFile(null); setModalOpen(true); };
+
+  const openEdit = (photo: PhotoRow) => {
+    setEditId(photo.id);
+    setForm({ category_id: String(photo.category_id ?? "1"), title: photo.title, description: photo.description ?? "" });
+    setImagePreview(photo.images?.[0] ?? "");
+    setImageFile(null);
     setModalOpen(true);
-  };
-
-  const openEdit = (photo: Photo) => {
-    setEditItem(photo);
-    setForm({ title: photo.title, category: photo.category, description: photo.description, image: photo.image });
-    setImagePreview(photo.image);
-    setModalOpen(true);
-  };
-
-  const handleDelete = (id: string) => {
-    setDeleteId(id);
-  };
-
-  const confirmDelete = () => {
-    if (deleteId) {
-      setPhotos((prev) => prev.filter((p) => p.id !== deleteId));
-      setDeleteId(null);
-    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setImagePreview(result);
-      setForm((f) => ({ ...f, image: result }));
-    };
-    reader.readAsDataURL(file);
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editItem) {
-      setPhotos((prev) =>
-        prev.map((p) => (p.id === editItem.id ? { ...p, ...form } : p))
-      );
+    if (editId !== null) {
+      updateMutation.mutate({ id: editId, data: { category_id: form.category_id, title: form.title, description: form.description, ...(imageFile ? { images: [imageFile] } : {}) } });
     } else {
-      setPhotos((prev) => [
-        ...prev,
-        { ...form, id: Date.now().toString() },
-      ]);
+      addMutation.mutate({ category_id: form.category_id, title: form.title, description: form.description, images: imageFile ? [imageFile] : [] });
     }
-    setModalOpen(false);
   };
 
-  const columns: Column<Photo>[] = [
+  const isPending = addMutation.isPending || updateMutation.isPending;
+
+  const columns: Column<PhotoRow>[] = [
     {
-      key: "image",
+      key: "images",
       label: "Image",
       render: (row) =>
-        row.image ? (
-          <img src={row.image} alt={row.title} className="w-12 h-10 object-cover rounded-md border border-border" />
+        row.images?.[0] ? (
+          <img src={row.images[0]} alt={row.title} className="w-12 h-10 object-cover rounded-md border border-border" />
         ) : (
           <div className="w-12 h-10 rounded-md border border-border bg-muted flex items-center justify-center">
             <ImageIcon size={16} className="text-muted-foreground" />
@@ -100,107 +105,67 @@ export default function PhotosPage() {
     },
     { key: "title", label: "Title" },
     {
-      key: "category", label: "Category", render: (row) => (
+      key: "category_id",
+      label: "Category",
+      render: (row) => (
         <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
-          {row.category}
+          {CATEGORIES.find((c) => c.value === String(row.category_id))?.label ?? row.category_id}
         </span>
-      )
+      ),
     },
     {
-      key: "description", label: "Description", render: (row) => (
-        <span className="line-clamp-1 text-muted-foreground">{row.description.slice(0, 20) + (row.description?.length > 20 ? `...` : ``)}</span>
-      )
+      key: "description",
+      label: "Description",
+      render: (row) => (
+        <span className="line-clamp-1 text-muted-foreground">
+          {(row.description ?? "").slice(0, 40)}{(row.description?.length ?? 0) > 40 ? "…" : ""}
+        </span>
+      ),
     },
   ];
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
-      <AdminPageHeader
-        title="Photos"
-        description="Manage your interior design photo gallery."
-        onAdd={openAdd}
-        addLabel="Add Photo"
-      />
+      <AdminPageHeader title="Photos" description="Manage your interior design photo gallery." onAdd={openAdd} addLabel="Add Photo" />
 
-      <AdminTable
-        columns={columns}
-        data={photos}
-        onEdit={openEdit}
-        onDelete={handleDelete}
-        emptyMessage="No photos yet. Click 'Add Photo' to get started."
-      />
+      {isLoading ? (
+        <div className="flex items-center justify-center py-16 text-muted-foreground gap-2">
+          <Loader2 size={18} className="animate-spin" /> Loading photos…
+        </div>
+      ) : (
+        <AdminTable columns={columns} data={photos} onEdit={openEdit} onDelete={(id) => setDeleteId(Number(id))} emptyMessage="No photos yet. Click 'Add Photo' to get started." />
+      )}
 
-      {/* Add / Edit Modal */}
-      <AdminModal
-        title={editItem ? "Edit Photo" : "Add New Photo"}
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-      >
+      <AdminModal title={editId !== null ? "Edit Photo" : "Add New Photo"} isOpen={modalOpen} onClose={closeModal}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <FormField label="Title" required>
-            <Input
-              value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-              placeholder="e.g. Modern Living Room"
-              required
-            />
+            <Input value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="e.g. Modern Living Room" required />
           </FormField>
-
           <FormField label="Category" required>
-            <Select
-              options={CATEGORIES}
-              value={form.category}
-              onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-            />
+            <Select options={CATEGORIES} value={form.category_id} onChange={(e) => setForm((f) => ({ ...f, category_id: e.target.value }))} />
           </FormField>
-
           <FormField label="Description">
-            <Textarea
-              value={form.description}
-              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              placeholder="Brief description of this photo..."
-            />
+            <Textarea value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} placeholder="Brief description..." />
           </FormField>
-
           <FormField label="Image" hint="Upload an image (JPG, PNG, WebP).">
             <div className="space-y-2">
-              <Input type="file" accept="image/*" onChange={handleImageChange} className="cursor-pointer" />
-              {imagePreview && (
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-full h-40 object-cover rounded-lg border border-border"
-                />
-              )}
+              <Input ref={fileRef} type="file" accept="image/*" onChange={handleImageChange} className="cursor-pointer" />
+              {imagePreview && <img src={imagePreview} alt="Preview" className="w-full h-40 object-cover rounded-lg border border-border" />}
             </div>
           </FormField>
-
-          <FormActions onCancel={() => setModalOpen(false)} isEdit={!!editItem} />
+          {(addMutation.isError || updateMutation.isError) && (
+            <p className="text-sm text-destructive">Failed to save photo. Please try again.</p>
+          )}
+          <FormActions onCancel={closeModal} isEdit={editId !== null} isLoading={isPending} />
         </form>
       </AdminModal>
 
-      {/* Delete Confirm Modal */}
-      <AdminModal
-        title="Confirm Delete"
-        isOpen={!!deleteId}
-        onClose={() => setDeleteId(null)}
-        size="sm"
-      >
-        <p className="text-muted-foreground text-sm">
-          Are you sure you want to delete this photo? This action cannot be undone.
-        </p>
+      <AdminModal title="Confirm Delete" isOpen={deleteId !== null} onClose={() => setDeleteId(null)} size="sm">
+        <p className="text-muted-foreground text-sm">Are you sure you want to delete this photo? This action cannot be undone.</p>
         <div className="flex items-center justify-end gap-3 mt-6">
-          <button
-            onClick={() => setDeleteId(null)}
-            className="px-4 py-2 text-sm font-medium rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={confirmDelete}
-            className="px-4 py-2 text-sm font-medium rounded-lg bg-destructive hover:bg-destructive/90 text-white transition-colors"
-          >
-            Delete
+          <button onClick={() => setDeleteId(null)} className="px-4 py-2 text-sm font-medium rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors">Cancel</button>
+          <button onClick={() => deleteId !== null && deleteMutation.mutate(deleteId)} disabled={deleteMutation.isPending} className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-destructive hover:bg-destructive/90 text-white transition-colors disabled:opacity-60">
+            {deleteMutation.isPending && <Loader2 size={14} className="animate-spin" />} Delete
           </button>
         </div>
       </AdminModal>

@@ -20,13 +20,19 @@ import {
   PenTool,
   Home,
   Star,
+  Quote,
   X,
   Phone,
   Mail,
   MapPin,
+  ShieldCheck,
+  BadgeCheck,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
+import { ratingService } from "@/services";
+import { seedReviews } from "@/lib/adminStore";
 const lineGrow = "/images/lineGrow.svg";
 
 const discovery = "/images/aboutIcon/discovery.svg";
@@ -592,6 +598,147 @@ const Counter = ({ endValue, color }: any) => {
   return <span ref={counterRef}>{count}</span>;
 };
 
+// ─── Reviews Carousel ─────────────────────────────────────────────────────────
+
+function ReviewsCarousel() {
+  const { data: apiReviews } = useQuery({
+    queryKey: ["approved-ratings"],
+    queryFn: ratingService.getAllApprovedRatings,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const reviews = (
+    apiReviews && apiReviews.length > 0
+      ? apiReviews
+      : seedReviews.filter((r) => r.allowed)
+  ) as Array<{ id: string | number; name: string; rating?: number; description?: string }>;
+
+  const [current, setCurrent] = useState(0);
+
+  const prev = () =>
+    setCurrent((c) => (c === 0 ? reviews.length - 1 : c - 1));
+  const next = () =>
+    setCurrent((c) => (c === reviews.length - 1 ? 0 : c + 1));
+
+  useEffect(() => {
+    if (reviews.length <= 1) return;
+    const t = setInterval(next, 5000);
+    return () => clearInterval(t);
+  });
+
+  if (!reviews.length) return null;
+
+  const review = reviews[current];
+
+  return (
+    <section className="section-padding bg-muted/30">
+      <div className="container-narrow">
+        <SectionHeading
+          subtitle="Client Reviews"
+          title="What Our Clients Say"
+          description="Real stories from the people who live in the spaces we've created."
+        />
+
+        <div className="relative max-w-3xl mx-auto px-10 md:px-16">
+          {/* Card */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -24 }}
+              transition={{ duration: 0.4 }}
+              className="bg-card border border-border rounded-2xl px-8 py-10 md:px-14 md:py-12 shadow-lg text-center"
+            >
+              <Quote
+                size={44}
+                className="text-primary/20 mx-auto mb-6 fill-primary/10"
+              />
+
+              <p className="text-foreground text-lg md:text-xl leading-relaxed mb-8 italic">
+                &ldquo;{review.description ?? "Great service and design!"}&rdquo;
+              </p>
+
+              {/* Stars */}
+              <div className="flex justify-center gap-1 mb-6">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    size={18}
+                    className={
+                      i < (review.rating ?? 5)
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-muted-foreground/40"
+                    }
+                  />
+                ))}
+              </div>
+
+              {/* Avatar + name */}
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-11 h-11 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-base shadow">
+                  {review.name?.charAt(0).toUpperCase() ?? "?"}
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold text-sm flex items-center">{review.name}&nbsp;<BadgeCheck className="text-sky-500 w-3.5 h-3.5" /></p>
+                  <p className="text-muted-foreground text-xs">Verified Client</p>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Prev / Next arrows */}
+          {reviews.length > 1 && (
+            <>
+              <button
+                onClick={prev}
+                aria-label="Previous review"
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors shadow"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={next}
+                aria-label="Next review"
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors shadow"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </>
+          )}
+
+          {/* Dot indicators */}
+          {reviews.length > 1 && (
+            <div className="flex justify-center gap-2 mt-6">
+              {reviews.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  aria-label={`Go to review ${i + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 ${i === current
+                    ? "bg-primary w-6"
+                    : "bg-muted-foreground/30 w-2"
+                    }`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* CTA link */}
+        {/* <div className="text-center mt-10">
+          <Link
+            href="/rate"
+            className="inline-flex items-center gap-2 text-primary font-medium text-sm hover:underline underline-offset-4"
+          >
+            Share your experience <ArrowRight size={15} />
+          </Link>
+        </div> */}
+      </div>
+    </section>
+  );
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
@@ -1023,13 +1170,16 @@ export default function HomePage() {
         </div>
       </section> */}
 
-      {/* 10) FAQs */}
+      {/* 10) REVIEWS CAROUSEL */}
+      <ReviewsCarousel />
+
+      {/* 11) FAQs */}
       <FAQSection />
 
-      {/* 11) GET IN TOUCH – half-scroll popup */}
+      {/* 12) GET IN TOUCH – half-scroll popup */}
       <GetInTouchPopup />
 
-      {/* 12) FOOTER is rendered by Layout automatically */}
+      {/* 13) FOOTER is rendered by Layout automatically */}
     </Layout>
   );
 }
