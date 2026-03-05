@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { blogService } from "@/services";
 import AdminModal from "@/components/admin/AdminModal";
 import { FormField, Input, Textarea, Select, FormActions } from "@/components/admin/FormField";
-import { Globe, FileText, Edit2, Search, CheckCircle2 } from "lucide-react";
+import { Globe, FileText, Edit2, Search, CheckCircle2, Upload, X } from "lucide-react";
 import {
   PAGE_KEYS,
   SeoSettings,
@@ -31,17 +31,88 @@ const emptyForm: SeoSettings = {
   title: "",
   description: "",
   keywords: "",
+  canonicalUrl: "",
   ogTitle: "",
   ogDescription: "",
   ogImage: "",
-  twitterTitle: "",
-  twitterDescription: "",
+  featureImage: "",
   robots: "index, follow",
 };
 
 type ModalTarget =
   | { type: "page"; key: string; label: string }
   | { type: "blog"; id: number | string; title: string };
+
+// ── Image Upload Field ───────────────────────────────────────────────────────
+
+function ImageUploadField({
+  value,
+  onChange,
+  hint,
+}: {
+  value: string;
+  onChange: (url: string) => void;
+  hint?: string;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      onChange(ev.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+    // Reset so same file can be re-selected
+    e.target.value = "";
+  };
+
+  return (
+    <div className="space-y-2">
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFile}
+      />
+      {value ? (
+        <div className="relative rounded-lg overflow-hidden border border-border">
+          <img src={value} alt="Preview" className="w-full h-40 object-cover" />
+          <div className="absolute top-2 right-2 flex gap-1.5">
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              className="px-2 py-1 text-xs rounded bg-black/60 text-white hover:bg-black/80 transition-colors"
+            >
+              Change
+            </button>
+            <button
+              type="button"
+              onClick={() => onChange("")}
+              className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-red-500/80 text-white hover:bg-red-600 transition-colors"
+            >
+              <X size={10} /> Remove
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="w-full h-28 rounded-lg border-2 border-dashed border-border hover:border-primary/50 flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Upload size={18} />
+          <span className="text-xs">Click to upload image</span>
+        </button>
+      )}
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+    </div>
+  );
+}
+
+// ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function SeoPage() {
   const [activeTab, setActiveTab] = useState<"pages" | "blogs">("pages");
@@ -108,8 +179,8 @@ export default function SeoPage() {
             SEO Settings
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Manage meta title, description, Open Graph and Twitter tags for all
-            pages and blog posts.
+            Manage meta title, description, Open Graph, canonical URL, and feature
+            images for all pages and blog posts.
           </p>
         </div>
         <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 self-start sm:self-auto flex-shrink-0">
@@ -310,6 +381,20 @@ export default function SeoPage() {
                 />
               </FormField>
 
+              <FormField
+                label="Canonical URL"
+                hint="Self-referencing URL to prevent duplicate content issues"
+              >
+                <Input
+                  value={form.canonicalUrl}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, canonicalUrl: e.target.value }))
+                  }
+                  placeholder="https://example.com/page-url"
+                  type="url"
+                />
+              </FormField>
+
               <FormField label="Robots Directive">
                 <Select
                   options={ROBOTS_OPTIONS}
@@ -320,6 +405,23 @@ export default function SeoPage() {
                 />
               </FormField>
             </div>
+          </section>
+
+          {/* Feature Image */}
+          <section className="border-t border-border pt-5">
+            <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
+              Feature Image
+            </h3>
+            <FormField
+              label="Feature Image"
+              hint="Hero / thumbnail image for this page or post"
+            >
+              <ImageUploadField
+                value={form.featureImage}
+                onChange={(url) => setForm((f) => ({ ...f, featureImage: url }))}
+                hint="Used as fallback OG image if no OG image is set"
+              />
+            </FormField>
           </section>
 
           {/* Open Graph */}
@@ -353,47 +455,13 @@ export default function SeoPage() {
               </FormField>
 
               <FormField
-                label="OG Image URL"
-                hint="Full URL to share image (1200×630 px recommended)"
+                label="OG Image"
+                hint="Upload share image (1200×630 px recommended)"
               >
-                <Input
+                <ImageUploadField
                   value={form.ogImage}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, ogImage: e.target.value }))
-                  }
-                  placeholder="https://example.com/og-image.jpg"
-                />
-              </FormField>
-            </div>
-          </section>
-
-          {/* Twitter / X */}
-          <section className="border-t border-border pt-5">
-            <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
-              Twitter / X Card
-            </h3>
-            <div className="space-y-4">
-              <FormField label="Twitter Title" hint="Leave blank to use Meta Title">
-                <Input
-                  value={form.twitterTitle}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, twitterTitle: e.target.value }))
-                  }
-                  placeholder="Fallback: uses Meta Title"
-                />
-              </FormField>
-
-              <FormField
-                label="Twitter Description"
-                hint="Leave blank to use Meta Description"
-              >
-                <Textarea
-                  rows={2}
-                  value={form.twitterDescription}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, twitterDescription: e.target.value }))
-                  }
-                  placeholder="Fallback: uses Meta Description"
+                  onChange={(url) => setForm((f) => ({ ...f, ogImage: url }))}
+                  hint="Overrides Feature Image for social sharing previews"
                 />
               </FormField>
             </div>

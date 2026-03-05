@@ -8,11 +8,11 @@ export interface SeoSettings {
   title: string;
   description: string;
   keywords: string;
+  canonicalUrl: string;
   ogTitle: string;
   ogDescription: string;
   ogImage: string;
-  twitterTitle: string;
-  twitterDescription: string;
+  featureImage: string;
   robots: string;
 }
 
@@ -37,13 +37,12 @@ export const defaultSeo: SeoSettings = {
   description:
     "We craft timeless interiors that tell your story. Every space deserves to be extraordinary.",
   keywords: "interior design, home decor, luxury interiors, Brightocity",
+  canonicalUrl: "",
   ogTitle: "Brightocity Interior",
   ogDescription:
     "We craft timeless interiors that tell your story. Every space deserves to be extraordinary.",
   ogImage: "",
-  twitterTitle: "Brightocity Interior",
-  twitterDescription:
-    "We craft timeless interiors that tell your story. Every space deserves to be extraordinary.",
+  featureImage: "",
   robots: "index, follow",
 };
 

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { getPageSeo, SeoSettings } from "@/lib/seoStore";
 
 /**
- * Applies SEO meta tags (title, description, keywords, OG, Twitter) to the
+ * Applies SEO meta tags (title, description, keywords, OG, canonical) to the
  * document head based on per-page settings saved by the admin in localStorage.
  *
  * @param pageKey  The page identifier (e.g. "home", "about", "blog").
@@ -22,16 +22,23 @@ export function useSeoMeta(pageKey: string, overrides?: Partial<SeoSettings>) {
     if (seo.keywords) setMeta("keywords", seo.keywords);
     setMeta("robots", seo.robots || "index, follow");
 
+    // Canonical URL
+    if (seo.canonicalUrl) {
+      let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+      if (!link) {
+        link = document.createElement("link");
+        link.rel = "canonical";
+        document.head.appendChild(link);
+      }
+      link.href = seo.canonicalUrl;
+    }
+
     // Open Graph
     setMetaProp("og:title", seo.ogTitle || seo.title);
     setMetaProp("og:description", seo.ogDescription || seo.description);
     setMetaProp("og:type", "website");
     if (seo.ogImage) setMetaProp("og:image", seo.ogImage);
-
-    // Twitter / X Card
-    setMetaProp("twitter:card", "summary_large_image");
-    setMetaProp("twitter:title", seo.twitterTitle || seo.title);
-    setMetaProp("twitter:description", seo.twitterDescription || seo.description);
+    else if (seo.featureImage) setMetaProp("og:image", seo.featureImage);
   }, [pageKey]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
