@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { appendReview } from "@/lib/reviewStore";
 import Image from "next/image";
 import logo from "../../../public/images/logo.png";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 function StarRatingInput({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   const [hovered, setHovered] = useState(0);
@@ -165,6 +166,7 @@ function RateForm() {
 }
 
 export default function RatePage() {
+  useSeoMeta("rate");
   return (
     <Layout>
       <section className="pb-8 px-4">

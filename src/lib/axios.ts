@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const TOKEN_KEY = "brightocity_auth_token";
-const USER_KEY  = "brightocity_auth_user";
+const USER_KEY = "brightocity_auth_user";
 
 export interface StoredUser {
   id: number;
@@ -11,7 +11,7 @@ export interface StoredUser {
 }
 
 export const apiClient = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
+  baseURL: "https://brightocityinterior.com/backend/api",
   headers: {
     "Accept": "application/json",
   },

@@ -7,8 +7,10 @@ import SectionHeading from "@/components/SectionHeading";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 export default function ContactPage() {
+  useSeoMeta("contact");
   const { toast } = useToast();
   const [form, setForm] = useState({
     name: "",
@@ -21,7 +23,7 @@ export default function ContactPage() {
     e.preventDefault();
     toast({
       title: "Message Sent!",
-      description: "We'll get back to you within 24 hours.",
+      description: "Our expart will contact you shortly.",
     });
     setForm({ name: "", email: "", phone: "", message: "" });
   };
@@ -111,8 +113,8 @@ export default function ContactPage() {
                   Business Hours
                 </h4>
                 <div className="text-muted-foreground text-sm space-y-1">
-                  <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                  <p>Saturday: 10:00 AM - 4:00 PM</p>
+                  <p>Monday - Saturday: 9:00 AM - 8:00 PM</p>
+                  {/* <p>Saturday: 10:00 AM - 4:00 PM</p> */}
                   <p>Sunday: Closed</p>
                 </div>
               </div>

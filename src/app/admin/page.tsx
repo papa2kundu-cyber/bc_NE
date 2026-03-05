@@ -18,9 +18,9 @@ const stats = [
   { label: "Videos", value: "6", icon: Video, path: "/admin/videos", color: "bg-blue-50 text-blue-600/40 border-blue-200" },
   { label: "Blog Blocks", value: "8", icon: FileText, path: "/admin/blocks", color: "bg-purple-50 text-purple-600/40 border-purple-200" },
   { label: "Team Members", value: "5", icon: Users, path: "/admin/teams", color: "bg-green-50 text-green-600/40 border-green-200" },
-  { label: "FAQs", value: "10", icon: HelpCircle, path: "/admin/faqs", color: "bg-yellow-50 text-yellow-600/40 border-yellow-200" },
+  { label: "FAQs", value: "10", icon: HelpCircle, path: "/admin/faqs", color: "bg-[#00000000] text-yellow-600/40 border-yellow-200" },
   { label: "Reviews", value: "24", icon: Star, path: "/admin/reviews", color: "bg-pink-50 text-pink-600/40 border-pink-200" },
-  { label: "Contact Messages", value: "3", icon: Mail, path: "/admin/contacts", color: "bg-teal-50 text-teal-600/40 border-teal-200" },
+  { label: "Contacts", value: "3", icon: Mail, path: "/admin/contacts", color: "bg-teal-50 text-teal-600/40 border-teal-200" },
 ];
 
 const quickLinks = [

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 import {
   ArrowRight,
   // Play,
@@ -480,7 +481,7 @@ function GetInTouchPopup() {
     const onScroll = () => {
       const scrolled =
         window.scrollY / (document.body.scrollHeight - window.innerHeight);
-      if (scrolled > 0.5 && !dismissed) setShown(true);
+      if (scrolled > 0.1 && !dismissed) setShown(true);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -742,6 +743,7 @@ function ReviewsCarousel() {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  useSeoMeta("home");
   return (
     <Layout>
       {/* 1) VIDEO */}

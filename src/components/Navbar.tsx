@@ -10,13 +10,13 @@ const logo = "/images/logo.png";
 
 const navItems = [
   { label: "Home", path: "/" },
+  { label: "About Us", path: "/about" },
   { label: "Our Works", path: "/works" },
   { label: "Interior", path: "/interior" },
   { label: "Video Gallery", path: "/video-gallery" },
   { label: "Blog", path: "/blog" },
   // { label: "Our Team", path: "/teams" },
   { label: "FAQ", path: "/faq" },
-  { label: "About Us", path: "/about" },
   { label: "Contact Us", path: "/contact" },
 ];
 

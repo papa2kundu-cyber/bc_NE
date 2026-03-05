@@ -208,7 +208,7 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
   //  LEFT PANEL (shared branding)
   // ─────────────────────────────────────────────────────────────────────────
   const LeftPanel = () => (
-    <div className="hidden lg:flex lg:w-5/12 bg-foreground relative overflow-hidden flex-col items-center justify-center p-12 flex-shrink-0">
+    <div className="hidden lg:flex lg:w-5/12 bg-black relative overflow-hidden flex-col items-center justify-center p-12 flex-shrink-0">
       <div
         className="absolute inset-0 opacity-[0.04]"
         style={{

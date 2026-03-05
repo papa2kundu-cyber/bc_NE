@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import Image from "next/image";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const categories = [
   {
@@ -34,6 +35,7 @@ const categories = [
 ];
 
 export default function InteriorPage() {
+  useSeoMeta("interior");
   return (
     <Layout>
       <section className="section-padding bg-muted/30">

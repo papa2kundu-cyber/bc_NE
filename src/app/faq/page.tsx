@@ -1,6 +1,9 @@
+"use client";
+
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const faqs = [
   { q: "What is your design process?", a: "Our process begins with a consultation to understand your vision, followed by concept development, design presentation, and finally execution. We keep you involved at every stage to ensure the result exceeds expectations." },
@@ -13,6 +16,7 @@ const faqs = [
 ];
 
 export default function FAQPage() {
+  useSeoMeta("faq");
   return (
     <Layout>
       <section className="section-padding bg-muted/30">

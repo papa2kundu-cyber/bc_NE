@@ -6,6 +6,7 @@ import SectionHeading from "@/components/SectionHeading";
 import Image from "next/image";
 import { Award, Users, Eye, Heart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const values = [
   { icon: Eye, title: "Vision", desc: "We see the potential in every space and bring it to life with creativity and precision." },
@@ -72,6 +73,7 @@ const Counter = ({ endValue, color }: any) => {
 
 
 export default function AboutPage() {
+  useSeoMeta("about");
   return (
     <Layout>
       {/* Hero */}

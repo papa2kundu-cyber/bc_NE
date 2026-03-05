@@ -9,6 +9,7 @@ import SectionHeading from "@/components/SectionHeading";
 import { teamService } from "@/services";
 import type { TeamMember } from "@/services";
 import { seedTeam } from "@/lib/adminStore";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 // ── Group members by designation keywords ─────────────────────────────────────
 function groupMembers(members: TeamMember[]): [string, TeamMember[]][] {
@@ -167,6 +168,7 @@ function GroupSection({
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function TeamsPage() {
+  useSeoMeta("teams");
   const { data: apiTeams, isLoading } = useQuery({
     queryKey: ["teams"],
     queryFn: teamService.getAllTeams,

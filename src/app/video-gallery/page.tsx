@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import { Play } from "lucide-react";
 import Image from "next/image";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const videos = [
   { thumb: "/images/hero-living.jpg", title: "Modern Living Room Transformation", duration: "4:32" },
@@ -16,6 +17,7 @@ const videos = [
 ];
 
 export default function VideoGalleryPage() {
+  useSeoMeta("video-gallery");
   return (
     <Layout>
       <section className="section-padding bg-muted/30">

@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import { Calendar, User } from "lucide-react";
 import Image from "next/image";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const posts = [
   {
@@ -34,6 +35,7 @@ const posts = [
 ];
 
 export default function BlogPage() {
+  useSeoMeta("blog");
   return (
     <Layout>
       <section className="section-padding bg-muted/30">
