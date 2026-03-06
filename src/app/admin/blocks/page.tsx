@@ -34,7 +34,7 @@ const emptyForm = {
   publish_date: new Date().toISOString().split("T")[0],
 };
 
-const emptySeo: SeoSettings = {
+const emptySeo: any = {
   title: "",
   description: "",
   keywords: "",
@@ -322,9 +322,8 @@ export default function BlocksPage() {
               </div>
               <ChevronDown
                 size={16}
-                className={`text-muted-foreground transition-transform duration-200 flex-shrink-0 ${
-                  seoExpanded ? "rotate-180" : ""
-                }`}
+                className={`text-muted-foreground transition-transform duration-200 flex-shrink-0 ${seoExpanded ? "rotate-180" : ""
+                  }`}
               />
             </button>
 

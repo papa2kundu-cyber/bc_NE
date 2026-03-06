@@ -14,6 +14,8 @@ export interface SeoSettings {
   ogImage: string;
   featureImage: string;
   robots: string;
+  twitterTitle: string;
+  twitterDescription: string;
 }
 
 export type SeoStore = Record<string, SeoSettings>;
@@ -32,7 +34,7 @@ export const PAGE_KEYS: { key: string; label: string; path: string }[] = [
   { key: "rate", label: "Rate / Reviews", path: "/rate" },
 ];
 
-export const defaultSeo: SeoSettings = {
+export const defaultSeo: any = {
   title: "Brightocity Interior",
   description:
     "We craft timeless interiors that tell your story. Every space deserves to be extraordinary.",

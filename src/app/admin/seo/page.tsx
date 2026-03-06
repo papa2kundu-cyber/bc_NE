@@ -27,7 +27,7 @@ const ROBOTS_OPTIONS = [
   { value: "noindex, nofollow", label: "noindex, nofollow" },
 ];
 
-const emptyForm: SeoSettings = {
+const emptyForm: any = {
   title: "",
   description: "",
   keywords: "",
@@ -202,11 +202,10 @@ export default function SeoPage() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex items-center gap-2 px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
-              activeTab === tab
+            className={`flex items-center gap-2 px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${activeTab === tab
                 ? "border-primary text-primary"
                 : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
+              }`}
           >
             {tab === "pages" ? <Globe size={14} /> : <FileText size={14} />}
             {tab === "pages" ? "Pages" : "Blog Posts"}
