@@ -1114,11 +1114,11 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
+            <div
+              // initial={{ opacity: 0, x: 40 }}
+              // whileInView={{ opacity: 1, x: 0 }}
+              // viewport={{ once: true }}
+              // transition={{ duration: 0.7 }}
               className="relative rounded-2xl overflow-hidden aspect-[4/4]"
             >
               <Image
@@ -1128,7 +1128,7 @@ export default function HomePage() {
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent" />
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
