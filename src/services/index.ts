@@ -24,3 +24,6 @@ export type { ContactPayload, ContactResponse } from "./contactService";
 
 export { categoryService } from "./categoryService";
 export type { Category, AddCategoryPayload } from "./categoryService";
+
+export { seoService } from "./seoService";
+export type { PageSeo, UpdatePageSeoPayload } from "./seoService";

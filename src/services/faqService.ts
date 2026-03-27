@@ -18,8 +18,8 @@ export const faqService = {
   },
 
   getAllFaqs: async (): Promise<FAQ[]> => {
-    const response = await apiClient.get<FAQ[]>("/get-all-faq");
-    return response.data;
+    const response: any = await apiClient.get<FAQ[]>("/get-all-faq");
+    return response.data.data;
   },
 
   deleteFaq: async (id: number | string): Promise<void> => {

@@ -60,7 +60,7 @@ export default function AdminTable<T extends { id: string | number }>({
     <>
       {/* ── CARD VIEW — mobile & tablet (hidden on lg+) ─────────────── */}
       <div className="lg:hidden space-y-3">
-        {data.map((row) => (
+        {data?.length ? data.map((row) => (
           <div
             key={row.id}
             className="bg-background border border-border rounded-xl p-4 space-y-3 hover:border-primary/30 transition-colors"
@@ -89,7 +89,7 @@ export default function AdminTable<T extends { id: string | number }>({
               <ActionButtons row={row} />
             </div>
           </div>
-        ))}
+        )) : <div className="w-full py-8 text-center">No records found.</div>}
       </div>
 
       {/* ── TABLE VIEW — desktop (hidden below lg) ──────────────────── */}
@@ -112,7 +112,7 @@ export default function AdminTable<T extends { id: string | number }>({
               </tr>
             </thead>
             <tbody>
-              {data.map((row, idx) => (
+              {data?.length ? data.map((row, idx) => (
                 <tr
                   key={row.id}
                   className={`border-b border-border last:border-0 ${idx % 2 === 0 ? "bg-background" : "bg-muted/20"
@@ -129,7 +129,7 @@ export default function AdminTable<T extends { id: string | number }>({
                     <ActionButtons row={row} />
                   </td>
                 </tr>
-              ))}
+              )) : <tr><td colSpan={columns.length + 1} className="w-full py-8 text-center">No records found.</td></tr>}
             </tbody>
           </table>
         </div>

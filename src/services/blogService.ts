@@ -42,13 +42,13 @@ export const blogService = {
   },
 
   getAllBlogs: async (): Promise<Blog[]> => {
-    const response = await apiClient.get<Blog[]>("/get-all-blog");
-    return response.data;
+    const response: any = await apiClient.get<Blog[]>("/get-all-blog");
+    return response.data.data;
   },
 
   getBlogById: async (id: number | string): Promise<Blog> => {
-    const response = await apiClient.get<Blog>(`/get-blog/${id}`);
-    return response.data;
+    const response: any = await apiClient.get<Blog>(`/get-blog/${id}`);
+    return response.data.data;
   },
 
   editBlog: async (id: number | string, data: UpdateBlogPayload): Promise<Blog> => {

@@ -26,8 +26,8 @@ export const videoService = {
   },
 
   getAllVideos: async (): Promise<Video[]> => {
-    const response = await apiClient.get<Video[]>("/get-all-video");
-    return response.data;
+    const response: any = await apiClient.get<Video[]>("/get-all-video");
+    return response.data.data;
   },
 
   editVideo: async (id: number | string, data: UpdateVideoPayload): Promise<Video> => {

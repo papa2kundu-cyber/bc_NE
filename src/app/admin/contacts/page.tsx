@@ -16,8 +16,8 @@ interface ContactMessage {
 }
 
 async function getAllContacts(): Promise<ContactMessage[]> {
-  const res = await apiClient.get<ContactMessage[]>("/get-all-contacts");
-  return res.data;
+  const res: any = await apiClient.get<ContactMessage[]>("/get-all-contacts");
+  return res.data.data;
 }
 
 export default function ContactsPage() {

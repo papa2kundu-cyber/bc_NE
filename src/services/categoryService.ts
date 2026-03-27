@@ -16,7 +16,7 @@ export const categoryService = {
   },
 
   getAllCategories: async (): Promise<Category[]> => {
-    const response = await apiClient.get<Category[]>("/get-all-category");
-    return response.data;
+    const response: any = await apiClient.get<Category[]>("/get-all-category");
+    return response.data.data;
   },
 };

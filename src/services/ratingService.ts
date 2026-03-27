@@ -21,13 +21,13 @@ export const ratingService = {
   },
 
   getAllApprovedRatings: async (): Promise<Rating[]> => {
-    const response = await apiClient.get<Rating[]>("/get-all-approved");
-    return response.data;
+    const response: any = await apiClient.get<Rating[]>("/get-all-approved");
+    return response.data.data;
   },
 
   getAllRatings: async (): Promise<Rating[]> => {
-    const response = await apiClient.get<Rating[]>("/get-all-rating");
-    return response.data;
+    const response: any = await apiClient.get<Rating[]>("/get-all-rating");
+    return response.data.data;
   },
 
   deleteRating: async (id: number | string): Promise<void> => {

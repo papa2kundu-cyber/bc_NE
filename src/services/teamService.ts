@@ -34,13 +34,13 @@ export const teamService = {
   },
 
   getAllTeams: async (): Promise<TeamMember[]> => {
-    const response = await apiClient.get<TeamMember[]>("/get-all-teams");
-    return response.data;
+    const response: any = await apiClient.get<TeamMember[]>("/get-all-teams");
+    return response.data.data;
   },
 
   getTeamById: async (id: number | string): Promise<TeamMember> => {
-    const response = await apiClient.get<TeamMember>(`/get-teams/${id}`);
-    return response.data;
+    const response: any = await apiClient.get<TeamMember>(`/get-teams/${id}`);
+    return response.data.data;
   },
 
   editTeam: async (id: number | string, data: UpdateTeamPayload): Promise<TeamMember> => {

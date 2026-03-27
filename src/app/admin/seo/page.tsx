@@ -1,23 +1,23 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { blogService } from "@/services";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  seoService,
+  blogService,
+  PageSeo,
+  UpdatePageSeoPayload,
+} from "@/services";
 import AdminModal from "@/components/admin/AdminModal";
 import { FormField, Input, Textarea, Select, FormActions } from "@/components/admin/FormField";
 import { Globe, FileText, Edit2, Search, CheckCircle2, Upload, X } from "lucide-react";
 import {
-  PAGE_KEYS,
-  SeoSettings,
-  defaultSeo,
-  getAllPageSeo,
-  getPageSeo,
-  setPageSeo,
+  BlogSeoStore,
   getAllBlogSeo,
   getBlogSeo,
   setBlogSeo,
-  SeoStore,
-  BlogSeoStore,
+  defaultSeo,
+  SeoSettings
 } from "@/lib/seoStore";
 
 const ROBOTS_OPTIONS = [
@@ -47,11 +47,15 @@ type ModalTarget =
 
 function ImageUploadField({
   value,
+  preview,
   onChange,
+  onFileChange,
   hint,
 }: {
   value: string;
+  preview: string;
   onChange: (url: string) => void;
+  onFileChange: (file: File | null) => void;
   hint?: string;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -59,6 +63,9 @@ function ImageUploadField({
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    onFileChange(file);
+
     const reader = new FileReader();
     reader.onload = (ev) => {
       onChange(ev.target?.result as string);
@@ -67,6 +74,8 @@ function ImageUploadField({
     // Reset so same file can be re-selected
     e.target.value = "";
   };
+
+  const displayImage = preview || value;
 
   return (
     <div className="space-y-2">
@@ -77,9 +86,9 @@ function ImageUploadField({
         className="hidden"
         onChange={handleFile}
       />
-      {value ? (
+      {displayImage ? (
         <div className="relative rounded-lg overflow-hidden border border-border">
-          <img src={value} alt="Preview" className="w-full h-40 object-cover" />
+          <img src={displayImage} alt="Preview" className="w-full h-40 object-cover" />
           <div className="absolute top-2 right-2 flex gap-1.5">
             <button
               type="button"
@@ -90,7 +99,10 @@ function ImageUploadField({
             </button>
             <button
               type="button"
-              onClick={() => onChange("")}
+              onClick={() => {
+                onChange("");
+                onFileChange(null);
+              }}
               className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-red-500/80 text-white hover:bg-red-600 transition-colors"
             >
               <X size={10} /> Remove
@@ -117,31 +129,94 @@ function ImageUploadField({
 export default function SeoPage() {
   const [activeTab, setActiveTab] = useState<"pages" | "blogs">("pages");
   const [modalTarget, setModalTarget] = useState<ModalTarget | null>(null);
-  const [form, setForm] = useState<SeoSettings>(emptyForm);
-  const [pageSeoMap, setPageSeoMap] = useState<SeoStore>({});
-  const [blogSeoMap, setBlogSeoMapState] = useState<BlogSeoStore>({});
+
+  // For API pages
+  const [pageForm, setPageForm] = useState<UpdatePageSeoPayload>({
+    name: "",
+    meta_title: "",
+    meta_description: "",
+    canonical_url: "",
+    keyword: "",
+    robots_directive: "index, follow",
+    og_title: "",
+    og_description: "",
+    feature_image: null,
+    og_image: null,
+  });
+
+  // For Blog (localStorage based)
+  const [blogForm, setBlogForm] = useState<SeoSettings>(defaultSeo);
+
+  // Previews for images
+  const [previews, setPreviews] = useState({
+    feature_image: "",
+    og_image: "",
+  });
+
+  const [blogSeoMap, setBlogSeoMap] = useState<BlogSeoStore>({});
+  const queryClient = useQueryClient();
   const [toast, setToast] = useState("");
 
-  const refreshMaps = useCallback(() => {
-    setPageSeoMap(getAllPageSeo());
-    setBlogSeoMapState(getAllBlogSeo());
+  const refreshBlogMap = useCallback(() => {
+    setBlogSeoMap(getAllBlogSeo());
   }, []);
 
   useEffect(() => {
-    refreshMaps();
-  }, [refreshMaps]);
+    refreshBlogMap();
+  }, [refreshBlogMap]);
+
+  const { data: pages = [], isLoading: isLoadingPages } = useQuery({
+    queryKey: ["pages"],
+    queryFn: seoService.getPages,
+  });
 
   const { data: blogs = [] } = useQuery({
     queryKey: ["blogs"],
     queryFn: blogService.getAllBlogs,
   });
 
-  const openModal = (target: ModalTarget) => {
-    const current =
-      target.type === "page"
-        ? getPageSeo(target.key)
-        : getBlogSeo(target.id);
-    setForm({ ...defaultSeo, ...current });
+  const updatePageMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number | string; data: UpdatePageSeoPayload }) =>
+      seoService.updatePageSeo(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pages"] });
+      setToast("SEO settings saved successfully.");
+      setTimeout(() => setToast(""), 3000);
+      closeModal();
+    },
+  });
+
+  const openModal = async (target: ModalTarget) => {
+    if (target.type === "page") {
+      try {
+        const details = await seoService.getPageById(target.key);
+        setPageForm({
+          name: details.name || "",
+          meta_title: details.meta_title || "",
+          meta_description: details.meta_description || "",
+          canonical_url: details.canonical_url || "",
+          keyword: details.keyword || "",
+          robots_directive: details.robots_directive || "index, follow",
+          og_title: details.og_title || "",
+          og_description: details.og_description || "",
+          feature_image: details.feature_image || null,
+          og_image: details.og_image || null,
+        });
+        setPreviews({
+          feature_image: details.feature_image || "",
+          og_image: details.og_image || "",
+        });
+      } catch (err) {
+        console.error("Failed to fetch page details", err);
+      }
+    } else {
+      const current = getBlogSeo(target.id);
+      setBlogForm({ ...defaultSeo, ...current });
+      setPreviews({
+        feature_image: current.featureImage || "",
+        og_image: current.ogImage || "",
+      });
+    }
     setModalTarget(target);
   };
 
@@ -152,15 +227,14 @@ export default function SeoPage() {
     if (!modalTarget) return;
 
     if (modalTarget.type === "page") {
-      setPageSeo(modalTarget.key, form);
+      updatePageMutation.mutate({ id: modalTarget.key, data: pageForm });
     } else {
-      setBlogSeo(modalTarget.id, form);
+      setBlogSeo(modalTarget.id, blogForm);
+      refreshBlogMap();
+      setToast("Blog SEO settings saved successfully.");
+      setTimeout(() => setToast(""), 3000);
+      closeModal();
     }
-
-    refreshMaps();
-    closeModal();
-    setToast("SEO settings saved successfully.");
-    setTimeout(() => setToast(""), 3000);
   };
 
   const modalTitle = modalTarget
@@ -203,8 +277,8 @@ export default function SeoPage() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`flex items-center gap-2 px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${activeTab === tab
-                ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
           >
             {tab === "pages" ? <Globe size={14} /> : <FileText size={14} />}
@@ -216,49 +290,55 @@ export default function SeoPage() {
       {/* ── Pages tab ─────────────────────────────────────────────────────── */}
       {activeTab === "pages" && (
         <div className="grid grid-cols-1 gap-2">
-          {PAGE_KEYS.map(({ key, label, path }) => {
-            const seo = pageSeoMap[key];
-            const hasCustom = !!(seo?.title && seo.title !== defaultSeo.title);
-            return (
-              <div
-                key={key}
-                className="flex items-center gap-4 p-4 bg-background border border-border rounded-xl hover:border-primary/40 transition-colors"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-semibold text-foreground">
-                      {label}
-                    </span>
-                    <code className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
-                      {path}
-                    </code>
-                    {hasCustom && (
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
-                        SEO Set
+          {isLoadingPages ? (
+            <div className="flex justify-center py-10">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          ) : pages.length === 0 ? (
+            <div className="text-center py-10 text-muted-foreground">
+              No pages found from API.
+            </div>
+          ) : (
+            pages.map((page) => {
+              const hasCustom = !!(page.meta_title);
+              return (
+                <div
+                  key={page.id}
+                  className="flex items-center gap-4 p-4 bg-background border border-border rounded-xl hover:border-primary/40 transition-colors"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-semibold text-foreground">
+                        {page.name}
                       </span>
+                      {hasCustom && (
+                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                          SEO Set
+                        </span>
+                      )}
+                    </div>
+                    {page.meta_title && (
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-1 font-medium">
+                        {page.meta_title}
+                      </p>
+                    )}
+                    {page.meta_description && (
+                      <p className="text-xs text-muted-foreground line-clamp-1">
+                        {page.meta_description}
+                      </p>
                     )}
                   </div>
-                  {seo?.title && (
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-1 font-medium">
-                      {seo.title}
-                    </p>
-                  )}
-                  {seo?.description && (
-                    <p className="text-xs text-muted-foreground line-clamp-1">
-                      {seo.description}
-                    </p>
-                  )}
+                  <button
+                    onClick={() => openModal({ type: "page", key: String(page.id), label: page.name })}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex-shrink-0"
+                  >
+                    <Edit2 size={12} />
+                    Edit SEO
+                  </button>
                 </div>
-                <button
-                  onClick={() => openModal({ type: "page", key, label })}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex-shrink-0"
-                >
-                  <Edit2 size={12} />
-                  Edit SEO
-                </button>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       )}
 
@@ -275,7 +355,7 @@ export default function SeoPage() {
               </p>
             </div>
           ) : (
-            blogs.map((blog) => {
+            blogs?.length ? blogs.map((blog) => {
               const seo = blogSeoMap[blog.id];
               const hasCustom = !!(seo?.title);
               return (
@@ -321,7 +401,7 @@ export default function SeoPage() {
                   </button>
                 </div>
               );
-            })
+            }) : "No records found."
           )}
         </div>
       )}
@@ -335,47 +415,80 @@ export default function SeoPage() {
       >
         <form onSubmit={handleSave} className="space-y-5">
 
-          {/* Basic SEO */}
+          {/* Page Info */}
           <section>
             <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
-              Basic SEO
+              Page Info
             </h3>
+            <div className="space-y-4">
+              <FormField label="Page Name" required hint="Internal name for the page">
+                <Input
+                  disabled={modalTarget?.type !== "page"}
+                  value={modalTarget?.type === "page" ? pageForm.name : ""}
+                  onChange={(e) => {
+                    if (modalTarget?.type === "page") {
+                      setPageForm((f) => ({ ...f, name: e.target.value }));
+                    }
+                  }}
+                  placeholder="e.g. Home Page"
+                  required
+                />
+              </FormField>
+            </div>
+          </section>
+
+          {/* Basic SEO */}
+          <section className="border-t border-border pt-5">
             <div className="space-y-4">
               <FormField label="Meta Title" required hint="Recommended: 50–60 characters">
                 <Input
-                  value={form.title}
-                  onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                  value={modalTarget?.type === "page" ? pageForm.meta_title : blogForm.title}
+                  onChange={(e) => {
+                    if (modalTarget?.type === "page") {
+                      setPageForm((f) => ({ ...f, meta_title: e.target.value }));
+                    } else {
+                      setBlogForm((f) => ({ ...f, title: e.target.value }));
+                    }
+                  }}
                   placeholder="e.g. Brightocity Interior — Luxury Home Design"
                   required
                   maxLength={120}
                 />
                 <p className="text-xs text-muted-foreground mt-1 text-right">
-                  {form.title.length} / 120
+                  {(modalTarget?.type === "page" ? pageForm.meta_title : blogForm.title).length} / 120
                 </p>
               </FormField>
 
               <FormField label="Meta Description" required hint="Recommended: 150–160 characters">
                 <Textarea
                   rows={3}
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, description: e.target.value }))
-                  }
+                  value={modalTarget?.type === "page" ? pageForm.meta_description : blogForm.description}
+                  onChange={(e) => {
+                    if (modalTarget?.type === "page") {
+                      setPageForm((f) => ({ ...f, meta_description: e.target.value }));
+                    } else {
+                      setBlogForm((f) => ({ ...f, description: e.target.value }));
+                    }
+                  }}
                   placeholder="Brief description shown in search results..."
                   required
                   maxLength={300}
                 />
                 <p className="text-xs text-muted-foreground mt-1 text-right">
-                  {form.description.length} / 300
+                  {(modalTarget?.type === "page" ? pageForm.meta_description : blogForm.description).length} / 300
                 </p>
               </FormField>
 
               <FormField label="Keywords" hint="Comma-separated keywords">
                 <Input
-                  value={form.keywords}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, keywords: e.target.value }))
-                  }
+                  value={modalTarget?.type === "page" ? pageForm.keyword : blogForm.keywords}
+                  onChange={(e) => {
+                    if (modalTarget?.type === "page") {
+                      setPageForm((f) => ({ ...f, keyword: e.target.value }));
+                    } else {
+                      setBlogForm((f) => ({ ...f, keywords: e.target.value }));
+                    }
+                  }}
                   placeholder="e.g. interior design, luxury decor, home renovation"
                 />
               </FormField>
@@ -385,10 +498,14 @@ export default function SeoPage() {
                 hint="Self-referencing URL to prevent duplicate content issues"
               >
                 <Input
-                  value={form.canonicalUrl}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, canonicalUrl: e.target.value }))
-                  }
+                  value={modalTarget?.type === "page" ? pageForm.canonical_url : blogForm.canonicalUrl}
+                  onChange={(e) => {
+                    if (modalTarget?.type === "page") {
+                      setPageForm((f) => ({ ...f, canonical_url: e.target.value }));
+                    } else {
+                      setBlogForm((f) => ({ ...f, canonicalUrl: e.target.value }));
+                    }
+                  }}
                   placeholder="https://example.com/page-url"
                   type="url"
                 />
@@ -397,10 +514,14 @@ export default function SeoPage() {
               <FormField label="Robots Directive">
                 <Select
                   options={ROBOTS_OPTIONS}
-                  value={form.robots}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, robots: e.target.value }))
-                  }
+                  value={modalTarget?.type === "page" ? pageForm.robots_directive : blogForm.robots}
+                  onChange={(e) => {
+                    if (modalTarget?.type === "page") {
+                      setPageForm((f) => ({ ...f, robots_directive: e.target.value }));
+                    } else {
+                      setBlogForm((f) => ({ ...f, robots: e.target.value }));
+                    }
+                  }}
                 />
               </FormField>
             </div>
@@ -416,8 +537,20 @@ export default function SeoPage() {
               hint="Hero / thumbnail image for this page or post"
             >
               <ImageUploadField
-                value={form.featureImage}
-                onChange={(url) => setForm((f) => ({ ...f, featureImage: url }))}
+                value={modalTarget?.type === "page"
+                  ? (typeof pageForm.feature_image === "string" ? pageForm.feature_image : "")
+                  : blogForm.featureImage}
+                preview={previews.feature_image}
+                onChange={(url) => setPreviews(p => ({ ...p, feature_image: url }))}
+                onFileChange={(file) => {
+                  if (modalTarget?.type === "page") {
+                    setPageForm(f => ({ ...f, feature_image: file }));
+                  } else {
+                    // For blogs we use base64 for now as per original
+                    // Actually we can just wait for the onChange to update the preview
+                    // and then handled in blogForm if it was designed to take URLs
+                  }
+                }}
                 hint="Used as fallback OG image if no OG image is set"
               />
             </FormField>
@@ -431,10 +564,14 @@ export default function SeoPage() {
             <div className="space-y-4">
               <FormField label="OG Title" hint="Leave blank to use Meta Title">
                 <Input
-                  value={form.ogTitle}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, ogTitle: e.target.value }))
-                  }
+                  value={modalTarget?.type === "page" ? pageForm.og_title : blogForm.ogTitle}
+                  onChange={(e) => {
+                    if (modalTarget?.type === "page") {
+                      setPageForm((f) => ({ ...f, og_title: e.target.value }));
+                    } else {
+                      setBlogForm((f) => ({ ...f, ogTitle: e.target.value }));
+                    }
+                  }}
                   placeholder="Fallback: uses Meta Title"
                 />
               </FormField>
@@ -445,10 +582,14 @@ export default function SeoPage() {
               >
                 <Textarea
                   rows={2}
-                  value={form.ogDescription}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, ogDescription: e.target.value }))
-                  }
+                  value={modalTarget?.type === "page" ? pageForm.og_description : blogForm.ogDescription}
+                  onChange={(e) => {
+                    if (modalTarget?.type === "page") {
+                      setPageForm((f) => ({ ...f, og_description: e.target.value }));
+                    } else {
+                      setBlogForm((f) => ({ ...f, ogDescription: e.target.value }));
+                    }
+                  }}
                   placeholder="Fallback: uses Meta Description"
                 />
               </FormField>
@@ -458,15 +599,28 @@ export default function SeoPage() {
                 hint="Upload share image (1200×630 px recommended)"
               >
                 <ImageUploadField
-                  value={form.ogImage}
-                  onChange={(url) => setForm((f) => ({ ...f, ogImage: url }))}
+                  value={modalTarget?.type === "page"
+                    ? (typeof pageForm.og_image === "string" ? pageForm.og_image : "")
+                    : blogForm.ogImage}
+                  preview={previews.og_image}
+                  onChange={(url) => {
+                    setPreviews(p => ({ ...p, og_image: url }));
+                    if (modalTarget?.type === "blog") {
+                      setBlogForm(f => ({ ...f, ogImage: url }));
+                    }
+                  }}
+                  onFileChange={(file) => {
+                    if (modalTarget?.type === "page") {
+                      setPageForm(f => ({ ...f, og_image: file }));
+                    }
+                  }}
                   hint="Overrides Feature Image for social sharing previews"
                 />
               </FormField>
             </div>
           </section>
 
-          <FormActions onCancel={closeModal} isEdit isLoading={false} />
+          <FormActions onCancel={closeModal} isEdit isLoading={updatePageMutation.isPending} />
         </form>
       </AdminModal>
     </div>

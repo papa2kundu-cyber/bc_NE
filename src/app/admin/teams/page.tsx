@@ -82,6 +82,7 @@ export default function TeamsPage() {
   const isPending = addMutation.isPending || updateMutation.isPending;
 
   const columns: Column<TeamRow>[] = [
+    { key: "id", label: "ID" },
     {
       key: "image",
       label: "Photo",
@@ -99,15 +100,19 @@ export default function TeamsPage() {
       key: "designation",
       label: "Designation",
       render: (row) => (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-          {row.designation}
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+          {row.designation || "N/A"}
         </span>
       ),
     },
     {
       key: "description",
       label: "Description",
-      render: (row) => <span className="line-clamp-1 max-w-xs text-muted-foreground">{row.description}</span>,
+      render: (row) => (
+        <span className="line-clamp-1 max-w-xs text-muted-foreground italic">
+          {row.description || "No description provided."}
+        </span>
+      ),
     },
   ];
 

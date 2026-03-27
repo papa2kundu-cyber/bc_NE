@@ -92,19 +92,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   // ── Guard: show login screen if not authenticated ─────────────────────────
-  // if (!isLoggedIn) {
-  //   return (
-  //     <AdminLogin
-  //       onLogin={() => {
-  //         setIsLoggedIn(true);
-  //         setDisplayUser(getStoredUser());
-  //       }}
-  //     />
-  //   );
-  // }
-
-  // ── Guard: show login screen if not authenticated bypass ─────────────────────────
-  if (isLoggedIn) {
+  if (!isLoggedIn) {
     return (
       <AdminLogin
         onLogin={() => {
@@ -114,6 +102,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       />
     );
   }
+
+  // ── Guard: show login screen if not authenticated bypass ─────────────────────────
+  // if (isLoggedIn) {
+  //   return (
+  //     <AdminLogin
+  //       onLogin={() => {
+  //         setIsLoggedIn(true);
+  //         setDisplayUser(getStoredUser());
+  //       }}
+  //     />
+  //   );
+  // }
 
   const displayName = displayUser?.name ?? adminProfile.name;
   const displayEmail = displayUser?.email ?? adminProfile.email;

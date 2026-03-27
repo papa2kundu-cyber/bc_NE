@@ -36,13 +36,13 @@ export const photoService = {
   },
 
   getAllPhotos: async (): Promise<Photo[]> => {
-    const response = await apiClient.get<Photo[]>("/get-all-photo");
-    return response.data;
+    const response: any = await apiClient.get<Photo[]>("/get-all-photo");
+    return response.data.data;
   },
 
   getPhotoById: async (id: number | string): Promise<Photo> => {
-    const response = await apiClient.get<Photo>(`/get-photo/${id}`);
-    return response.data;
+    const response: any = await apiClient.get<Photo>(`/get-photo/${id}`);
+    return response.data.data;
   },
 
   updatePhoto: async (id: number | string, data: UpdatePhotoPayload): Promise<Photo> => {
