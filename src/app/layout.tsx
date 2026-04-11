@@ -6,9 +6,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "Brightocity Interior",
+  title: "Best Interior Designers in Kolkata | Premium & Affordable Design Solutions",
   description:
-    "We craft timeless interiors that tell your story. Every space deserves to be extraordinary.",
+    "Looking for the best Interior Designers in Kolkata? We create premium, personalised spaces with comfort and style. Trusted among top interior decorators in Kolkata for quality design.",
 };
 
 export default function RootLayout({

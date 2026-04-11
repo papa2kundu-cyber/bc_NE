@@ -34,6 +34,7 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import { ratingService } from "@/services";
 import { seedReviews } from "@/lib/adminStore";
+import { metadata } from "./layout";
 const lineGrow = "/images/lineGrow.svg";
 
 const discovery = "/images/aboutIcon/discovery.svg";
@@ -45,6 +46,7 @@ const reveal = "/images/aboutIcon/revealHandover.svg";
 const space = "/images/wynis/space.svg";
 const aethetics = "/images/wynis/aethetics.svg";
 const wellbeing = "/images/wynis/wellbeing.svg";
+
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -248,91 +250,26 @@ const faqs = [
 
 function VideoSection() {
   return (
-    <section className="md:px-0 md:py-0 px0 py-0 bg-foreground relative">
-      {/* <div className=""> */}
-      {/* <div className="absolute z-10 flex items-center justify-center w-full h-full">
-          <SectionHeading
-            subtitle="Watch Our Story"
-            classNameT="!text-white"
-            classNameDe="!text-white/80"
-            title="See Design Come to Life"
-            description="Experience how we transform ordinary spaces into extraordinary living environments."
-          />
-        </div> */}
-      <div className="relative overflow-hidden md:aspect-[16/7.5] aspect-[16/10] shadow-2xl">
-        {/* Dummy background image */}
-        <video
-          src="/video/Interior_Website_Intro_Video_Generation.MP4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute top-0 left-0 w-full h-full object-cover"
+    <section className="relative overflow-hidden md:aspect-[16/7.5] aspect-[16/10] shadow-2xl">
+      <video
+        src="/video/Interior_Website_Intro_Video_Generation.MP4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute top-0 left-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#f3f4f4] via-[#ffffffc8]/10 to-transparent pointer-events-none" />
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20 pointer-events-none">
+        <span className="text-foreground/80 text-[10px] sm:text-xs tracking-[0.3em] font-medium uppercase drop-shadow-md">
+          Discover
+        </span>
+        <motion.div
+          animate={{ y: [0, 10, 0], opacity: [0.3, 1, 0.3] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          className="w-px h-16 bg-gradient-to-b from-primary via-primary/50 to-transparent"
         />
-        {/* <Image
-            src="/images/hero-living.jpg"
-            alt="Interior design showcase"
-            fill
-            className="object-cover"
-          /> */}
-        {/* Dark overlay */}
-        {/* <div className="absolute inset-0 bg-foreground/60" /> */}
-
-        {/* Decorative top-left label */}
-        {/* <div className="absolute top-5 left-6 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-background/80 text-xs uppercase tracking-widest font-medium">
-              Brightocity Interior
-            </span>
-          </div> */}
-
-        {/* Centre play button — purely decorative / UI indicator */}
-        {/* <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-4">
-              <span className="cursor-pointer w-24 h-24 rounded-full bg-primary/90 flex items-center justify-center shadow-2xl ring-4 ring-primary/30">
-                <Play size={36} className="text-white ml-1" />
-              </span>
-              <span className="text-background/80 text-sm font-medium tracking-wide">
-                Watch Our Story
-              </span>
-            </div>
-          </div> */}
-
-        {/* Bottom info bar */}
-        {/* <div className="absolute bottom-0 left-0 right-0 px-6 py-4 bg-gradient-to-t from-foreground/80 to-transparent flex items-center justify-between">
-            <div>
-              <p className="text-background font-heading font-semibold text-lg leading-tight">
-                Transforming Spaces Since 2008
-              </p>
-              <p className="text-background/60 text-xs mt-0.5">
-                Interior Design &amp; Styling
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              {[
-                "/images/interior-bedroom.jpg",
-                "/images/interior-kitchen.jpg",
-                "/images/interior-bathroom.jpg",
-              ].map((src, i) => (
-                <div
-                  key={i}
-                  className="relative w-10 h-10 rounded-lg overflow-hidden border-2 border-primary/60 hidden sm:block"
-                >
-                  <Image
-                    src={src}
-                    alt="preview"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-              <span className="text-background/70 text-xs hidden sm:block">
-                +247 Projects
-              </span>
-            </div>
-          </div> */}
       </div>
-      {/* </div> */}
     </section>
   );
 }
@@ -346,68 +283,87 @@ function GallerySlider() {
     setCurrent((c) => (c === galleryImages.length - 1 ? 0 : c + 1));
 
   useEffect(() => {
-    const t = setInterval(next, 4000);
+    const t = setInterval(next, 5000);
     return () => clearInterval(t);
   });
 
   return (
-    <section className="section-padding bg-muted/30">
-      <div className="container-narrow">
+    <section className="py-24 bg-foreground relative overflow-hidden text-background">
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent pointer-events-none" />
+
+      <div className="container-narrow relative z-10">
         <SectionHeading
           subtitle="Our Portfolio"
           title="Gallery"
           description="A curated collection of our finest interior transformations."
+          classNameT="!text-background"
+          classNameDe="!text-background/80"
         />
-        <div className="relative overflow-hidden rounded-2xl shadow-xl aspect-[16/9] lg:aspect-[16/6]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current}
-              initial={{ opacity: 0, x: 80 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -80 }}
-              transition={{ duration: 0.5 }}
-              className="absolute inset-0"
-            >
-              <Image
-                src={galleryImages[current].img}
-                alt={galleryImages[current].title}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
-              <div className="absolute bottom-6 left-8">
-                <h3 className="font-heading text-2xl font-bold text-background">
-                  {galleryImages[current].title}
-                </h3>
-                {/* <p className="text-background/70 text-sm mt-1">
-                  {current + 1} / {galleryImages.length}
-                </p> */}
-              </div>
-            </motion.div>
-          </AnimatePresence>
 
-          <button
-            onClick={prev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/80 flex items-center justify-center hover:bg-background transition-colors shadow"
-            aria-label="Previous image"
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <button
-            onClick={next}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/80 flex items-center justify-center hover:bg-background transition-colors shadow"
-            aria-label="Next image"
-          >
-            <ChevronRight size={20} />
-          </button>
+        <div className="relative mt-16 mx-auto max-w-5xl rounded-3xl p-2 md:p-3 border border-background/20 bg-background/5 backdrop-blur-sm">
+          <div className="relative overflow-hidden rounded-2xl aspect-[16/10] lg:aspect-[16/7] shadow-2xl bg-muted z-10 group">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current}
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={galleryImages[current].img}
+                  alt={galleryImages[current].title}
+                  fill
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-          {/* Dots */}
-          <div className="absolute bottom-2 lg:bottom-4 right-4 flex gap-2">
+                <div className="absolute bottom-8 left-6 md:bottom-12 md:left-12">
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="w-8 h-px bg-primary/80" />
+                      <span className="text-primary font-medium tracking-widest text-xs uppercase">
+                        Project {String(current + 1).padStart(2, '0')}
+                      </span>
+                    </div>
+                    <h3 className="font-heading text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-md">
+                      {galleryImages[current].title}
+                    </h3>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="absolute right-4 bottom-4 md:right-8 md:bottom-8 flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button
+                onClick={prev}
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all duration-300"
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={next}
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all duration-300"
+                aria-label="Next image"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+
+          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-2">
             {galleryImages.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrent(i)}
-                className={`w-2 h-2 rounded-full transition-all ${i === current ? "bg-primary w-6" : "bg-background/60"}`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? "bg-primary w-8" : "bg-white/20 w-2 hover:bg-white/40"
+                  }`}
                 aria-label={`Go to slide ${i + 1}`}
               />
             ))}
@@ -421,14 +377,14 @@ function GallerySlider() {
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section className="section-padding">
-      <div className="container-narrow max-w-3xl">
+    <section className="py-24 relative bg-background">
+      <div className="container-narrow max-w-3xl relative z-10">
         <SectionHeading
           subtitle="Questions Answered"
           title="FAQs"
           description="Everything you need to know before starting your design journey."
         />
-        <div className="space-y-3">
+        <div className="space-y-4 mt-12">
           {faqs.map((faq, i) => (
             <motion.div
               key={i}
@@ -436,19 +392,23 @@ function FAQSection() {
               variants={fadeUp}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true }}
-              className="border border-border rounded-lg overflow-hidden"
+              viewport={{ once: true, margin: "-50px" }}
+              className={`rounded-2xl transition-all duration-300 border ${open === i ? 'bg-card border-primary/30 shadow-lg shadow-primary/5' : 'bg-transparent border-border hover:border-primary/30'}`}
             >
               <button
                 onClick={() => setOpen(open === i ? null : i)}
-                className="w-full flex items-center justify-between px-6 py-4 text-left font-medium text-foreground hover:bg-muted/30 transition-colors"
+                className="w-full flex items-center justify-between px-6 py-5 md:px-8 md:py-6 text-left group"
               >
-                <span>{faq.q}</span>
-                {open === i ? (
-                  <Minus size={18} className="text-primary shrink-0" />
-                ) : (
-                  <Plus size={18} className="text-primary shrink-0" />
-                )}
+                <span className={`font-semibold text-base md:text-lg transition-colors ${open === i ? 'text-primary' : 'text-foreground group-hover:text-primary'}`}>
+                  {faq.q}
+                </span>
+                <span className={`shrink-0 ml-4 flex items-center justify-center w-8 h-8 rounded-full transition-colors ${open === i ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'}`}>
+                  {open === i ? (
+                    <Minus size={16} />
+                  ) : (
+                    <Plus size={16} />
+                  )}
+                </span>
               </button>
               <AnimatePresence>
                 {open === i && (
@@ -456,10 +416,10 @@ function FAQSection() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <p className="px-6 pb-4 text-muted-foreground text-sm leading-relaxed">
+                    <p className="px-6 pb-6 md:px-8 md:pb-8 pt-0 text-muted-foreground leading-relaxed">
                       {faq.a}
                     </p>
                   </motion.div>
@@ -623,7 +583,7 @@ function ReviewsCarousel() {
 
   useEffect(() => {
     if (reviews.length <= 1) return;
-    const t = setInterval(next, 5000);
+    const t = setInterval(next, 6000);
     return () => clearInterval(t);
   });
 
@@ -632,122 +592,170 @@ function ReviewsCarousel() {
   const review = reviews[current];
 
   return (
-    <section className="section-padding bg-muted/30">
-      <div className="container-narrow">
+    <section className="py-24 bg-muted/20 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="container-narrow relative z-10">
         <SectionHeading
           subtitle="Client Reviews"
           title="What Our Clients Say"
           description="Real stories from the people who live in the spaces we've created."
         />
 
-        <div className="relative max-w-3xl mx-auto px-10 md:px-16">
-          {/* Card */}
+        <div className="relative max-w-4xl mx-auto mt-12 px-10 md:px-20">
           <AnimatePresence mode="wait">
             <motion.div
               key={current}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -24 }}
-              transition={{ duration: 0.4 }}
-              className="bg-card border border-border rounded-2xl px-8 py-10 md:px-14 md:py-12 shadow-lg text-center"
+              initial={{ opacity: 0, y: 30, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -30, scale: 0.98 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="bg-card/80 backdrop-blur border border-border/60 rounded-[2.5rem] p-10 md:p-16 shadow-2xl relative"
             >
               <Quote
-                size={44}
-                className="text-primary/20 mx-auto mb-6 fill-primary/10"
+                size={80}
+                className="absolute top-8 left-8 text-primary/10 rotate-180 pointer-events-none"
+              />
+              <Quote
+                size={80}
+                className="absolute bottom-8 right-8 text-primary/10 pointer-events-none"
               />
 
-              <p className="text-foreground text-lg md:text-xl leading-relaxed mb-8 italic">
-                &ldquo;{review.description ?? "Great service and design!"}&rdquo;
-              </p>
-
-              {/* Stars */}
-              <div className="flex justify-center gap-1 mb-6">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    size={18}
-                    className={
-                      i < (review.rating ?? 5)
-                        ? "text-yellow-400 fill-yellow-400"
-                        : "text-muted-foreground/40"
-                    }
-                  />
-                ))}
-              </div>
-
-              {/* Avatar + name */}
-              <div className="flex items-center justify-center gap-3">
-                <div className="w-11 h-11 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-base shadow">
-                  {review.name?.charAt(0).toUpperCase() ?? "?"}
+              <div className="relative z-10 text-center flex flex-col items-center">
+                <div className="flex justify-center gap-1.5 mb-8">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      size={20}
+                      className={
+                        i < (review.rating ?? 5)
+                          ? "text-[#DD7139] fill-[#DD7139]"
+                          : "text-muted-foreground/30"
+                      }
+                    />
+                  ))}
                 </div>
-                <div className="text-left">
-                  <p className="font-semibold text-sm flex items-center">{review.name}&nbsp;<BadgeCheck className="text-sky-500 w-3.5 h-3.5" /></p>
-                  <p className="text-muted-foreground text-xs">Verified Client</p>
+
+                <p className="text-foreground text-xl md:text-2xl font-heading leading-relaxed mb-10 text-balance">
+                  &ldquo;{review.description ?? "Great service and design!"}&rdquo;
+                </p>
+
+                <div className="flex items-center justify-center gap-4">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground flex items-center justify-center font-bold text-xl shadow-lg ring-4 ring-primary/10">
+                    {review.name?.charAt(0).toUpperCase() ?? "?"}
+                  </div>
+                  <div className="text-left text-sm">
+                    <p className="font-bold text-foreground flex items-center gap-1.5 text-base">
+                      {review.name}
+                      <BadgeCheck className="text-blue-500 w-4 h-4" />
+                    </p>
+                    <p className="text-muted-foreground mt-0.5 tracking-wide uppercase text-[10px] font-bold">
+                      Verified Client
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* Prev / Next arrows */}
           {reviews.length > 1 && (
             <>
               <button
                 onClick={prev}
                 aria-label="Previous review"
-                className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors shadow"
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 shadow-xl group"
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
               </button>
               <button
                 onClick={next}
                 aria-label="Next review"
-                className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors shadow"
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 shadow-xl group"
               >
-                <ChevronRight size={20} />
+                <ChevronRight size={20} className="group-hover:translate-x-0.5 transition-transform" />
               </button>
             </>
           )}
 
-          {/* Dot indicators */}
           {reviews.length > 1 && (
-            <div className="flex justify-center gap-2 mt-6">
+            <div className="flex justify-center gap-2 mt-8">
               {reviews.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrent(i)}
                   aria-label={`Go to review ${i + 1}`}
-                  className={`h-2 rounded-full transition-all duration-300 ${i === current
-                    ? "bg-primary w-6"
-                    : "bg-muted-foreground/30 w-2"
+                  className={`h-1.5 rounded-full transition-all duration-300 ${i === current
+                    ? "bg-primary w-8"
+                    : "bg-primary/20 w-1.5 hover:bg-primary/40"
                     }`}
                 />
               ))}
             </div>
           )}
         </div>
-
-        {/* CTA link */}
-        {/* <div className="text-center mt-10">
-          <Link
-            href="/rate"
-            className="inline-flex items-center gap-2 text-primary font-medium text-sm hover:underline underline-offset-4"
-          >
-            Share your experience <ArrowRight size={15} />
-          </Link>
-        </div> */}
       </div>
     </section>
   );
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
+const pdfSections = [
+  {
+    title: "Welcome to Brightocity Interior",
+    desc: "Welcome to Brightocity Interior, where we turn your everyday corner into something truly aesthetic. Being the best interior designers in Kolkata, we customise your comfort zone in a way that reflects your personality while hugging luxury design elements. Each of our projects has its own story towards perfection blended with class, style, and practicality.",
+    img: "/images/about-team.jpg"
+  },
+  {
+    title: "Why Should Interiors Be Well-designed?",
+    desc: "Your choice in Interiors defines your lifestyle. A space covered with suitable interiors brings positivity and peace to the environment. Applying suitable shades, lights, and layout lightens your mood, reduces stress levels, and mirrors your personal choice. Overall, it manages your home or workspace both functionally and emotionally for family & guests.",
+    img: "/images/interior-bedroom.jpg"
+  },
+  {
+    title: "Your Dream Decor Deserves The Best Interior Designers in Kolkata",
+    desc: "The best interior designers in Kolkata are fully aware of coordinating furniture and decor with technical knowledge to advance usability & safety. We are the leading interior design company in Kolkata, who believe every space deserves proper attention.",
+    img: "/images/hero-living.jpg"
+  },
+  {
+    title: "How We Approach Interior Design To You",
+    desc: "Our approach starts with noting down your requirements and ends with making it a reality through inspiring & functional enough interiors. Each task is done by the best interior designers in Kolkata. Hence, the results are not just visually stunning but also thoughtfully made.",
+    img: "/images/interior-kitchen.jpg"
+  },
+  {
+    title: "Service for Both Residential & Commercial Projects",
+    desc: "Be it a residential design or a commercial one, our team will take the lead so that you don't worry about a thing. As one of the best interior decorators in Kolkata, we pick the correct textures, colours, and materials for a warm, sophisticated space. That way, it lasts long even after having premium finish.",
+    img: "/images/interior-office.jpg"
+  },
+  {
+    title: "Process That Is Client-centric and Hassle-free",
+    desc: "Partnering with the best interior designers in Kolkata covers a smooth process with the final setup. We schedule meetups with our clients to make sure their expectations meet our capabilities. As trusted interior designers & decorators in Kolkata, we know how to balance between innovation and functionality for the best outcome possible.",
+    img: "/images/interior-bathroom.jpg"
+  },
+  {
+    title: "Where Experiences Talk",
+    desc: "The expertise we have handles numerous projects on modern apartments and premium corporate spaces. Our interior design company in Kolkata guarantees a meticulously planned delivery & execution, which eventually gained the trust of millions. This consistency is the reason behind our reputation as one of the best interior designers in Kolkata till now.",
+    img: "/images/hero-living.jpg"
+  },
+  {
+    title: "Meticulous Finish",
+    desc: "Our determination for a result you can't turn your head from has earned us the title of luxury interior designers in Kolkata. Moreover, luxury isn't just a word for us. It lives in the details, and our team makes sure to prove it through refinement in every sense. As a result, we’ve become the best interior designers in Kolkata for our clients, who never compromise on quality.",
+    img: "/images/interior-bedroom.jpg"
+  },
+  {
+    title: "A Blend of Convenience & Trend",
+    desc: "We always keep convenience in mind while showing off class in each interior we design for you. It is our greatest pleasure to be counted among the best interior decorators in Kolkata for designing aesthetic and easy-to-live-in spaces. Dedicated interior designers & decorators in Kolkata, give every project its own unique character while keeping everything to your choice.",
+    img: "/images/interior-kitchen.jpg"
+  },
+  {
+    title: "Invest in Good Hands",
+    desc: "Once you pick the best interior designers in Kolkata, you invest in only the best quality and creativity. Our work is our identity which reflects on how we decorate your personal space. So, let us design you such interiors that can both inspire & impress you.\n\nIf you're ready to live in a space you'll want to keep looking back to, then let us know. We're just a call away.",
+    img: "/images/about-team.jpg"
+  }
+];
 
-export default function HomePage() {
-  useSeoMeta("home");
+function PDFSectionsRenderer() {
   return (
-    <Layout>
-      {/* 1) VIDEO */}
-      <VideoSection />
+    <div className="flex flex-col gap-24 pb-24 bg-background relative overflow-hidden">
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent hidden lg:block -translate-x-1/2" />
 
       {/* 2) ABOUT US */}
       <div className="relative bg-[url('/images/reBg.png')] bg-repeat bg-center">
@@ -855,333 +863,100 @@ export default function HomePage() {
         </section>
       </div>
 
-      {/* 3) GALLERY (SLIDER TYPE) */}
-      <GallerySlider />
-
-      {/* 4) PERSONALIZED DESIGNS */}
-      <section className="section-padding">
-        <div className="container-narrow">
+      <div className="container-narrow relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-16 relative">
           <SectionHeading
-            subtitle="Made for You"
-            title="Personalized Designs"
-            description="Every space is unique. We craft interiors that reflect your personality, taste, and lifestyle."
+            subtitle="Our Approach"
+            title="Premium Design Solutions"
+            description="Crafting personalized spaces combining luxury with deep comfort."
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {personalizedDesigns.map((item, i) => (
+        </div>
+
+        <div className="flex flex-col gap-28 md:gap-40 mt-12">
+          {pdfSections.map((sec, i) => (
+            <div key={i} className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center relative group`}>
+
               <motion.div
-                key={item.title}
-                custom={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="group overflow-hidden rounded-xl border border-border hover:shadow-xl transition-all"
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className={`lg:col-span-7 relative ${i % 2 !== 0 ? 'lg:order-2 lg:col-start-6' : 'lg:col-start-1'}`}
               >
-                <div className="relative aspect-[4/3] overflow-hidden">
+                <div className={`absolute inset-0 border border-primary/30 rounded-2xl transition-transform duration-700 -z-10 bg-transparent ${i % 2 !== 0 ? '-translate-x-4 translate-y-4 group-hover:-translate-x-6 group-hover:translate-y-6' : 'translate-x-4 translate-y-4 group-hover:translate-x-6 group-hover:translate-y-6'}`} />
+
+                <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[5/4] shadow-2xl z-10 bg-muted">
+                  <div className="absolute inset-0 bg-primary/5 mix-blend-overlay z-10 transition-opacity duration-500 group-hover:opacity-0" />
                   <Image
-                    src={item.img}
-                    alt={item.title}
+                    src={sec.img}
+                    alt={sec.title}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-110"
                   />
                 </div>
-                <div className="p-4">
-                  <h3 className="font-heading text-lg font-semibold mb-1">
-                    {item.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
               </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* 5) OUR EXPERTISE */}
-      <section className="section-padding">
-        <div className="container-narrow">
-          <SectionHeading
-            subtitle="What We Do Best"
-            title="Our Expertise"
-            description="Deep specialisation across every dimension of interior design."
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {expertiseItems.map((item, i) => (
               <motion.div
-                key={item.title}
-                custom={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="hover:bg-primary/10 flex gap-4 p-6 bg-card rounded-xl border border-border hover:shadow-lg hover:border-primary/30 transition-all group"
+                initial={{ opacity: 0, x: i % 2 !== 0 ? 30 : -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+                className={`lg:col-span-5 relative z-20 ${i % 2 !== 0 ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-8'}`}
               >
-                <div className="w-12 h-12 rounded-lg bg-white group-hover:bg-primary flex items-center justify-center shrink-0 transition-colors">
-                  <item.icon
-                    size={22}
-                    className="text-primary group-hover:text-white"
-                  />
+                <div className={`absolute -top-16 lg:-top-24 ${i % 2 !== 0 ? 'right-0 lg:right-auto lg:left-0' : 'left-0 lg:left-auto lg:-right-8'} text-[8rem] lg:text-[12rem] font-heading font-black text-primary/5 select-none pointer-events-none leading-none -z-10`}>
+                  {String(i + 1).padStart(2, '0')}
                 </div>
-                <div>
-                  <h3 className="font-heading text-lg font-semibold mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* 6) WHY CHOOSE US */}
-      <section className="section-padding bg-foreground text-background">
-        <div className="container-narrow">
-          <SectionHeading
-            subtitle="Our Commitment"
-            title="Why Choose Us"
-            classNameT="!text-white"
-            description="We combine creativity with discipline to deliver design experiences that exceed expectations."
-          />
-          {/* Stats bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 text-center">
-            {whyChooseUs.map((s, i) => (
-              <motion.div
-                key={s.label}
-                custom={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-              >
-                <div className="text-4xl font-heading font-bold text-primary">
-                  {/* {s.num} */}
-                  <Counter endValue={parseInt(s.num)} />+
-                </div>
-                <div className="text-background/70 text-sm mt-1">{s.label}</div>
-              </motion.div>
-            ))}
-          </div>
-          {/* Reasons */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {whyChooseReasons.map((r, i) => (
-              <motion.div
-                key={r.title}
-                custom={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="bg-background/5 border border-background/10 rounded-xl p-6 hover:bg-background/10 transition-colors"
-              >
-                <r.icon size={28} className="text-primary mb-3" />
-                <h3 className="font-heading text-lg font-semibold mb-2">
-                  {r.title}
-                </h3>
-                <p className="text-background/70 text-sm leading-relaxed">
-                  {r.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7) WORK PROCESS */}
-      <section className="section-padding">
-        <div className="container-narrow">
-          <SectionHeading
-            subtitle="How We Work"
-            title="Work Process"
-            description="A transparent, collaborative process from first conversation to final reveal."
-          />
-          <div className="relative">
-            {/* Connector line for desktop */}
-            <div className="hidden lg:block absolute top-10 left-0 right-0 h-0.5 bg-border z-0" />
-            <motion.div
-              className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
-              animate={{ x: ["0%", "22%"] }}
-              transition={{ duration: 3, ease: "linear", repeat: Infinity }}
-            >
-              <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
-            </motion.div>
-
-            <motion.div
-              className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
-              animate={{ x: ["20%", "44%"] }}
-              transition={{ duration: 3, ease: "linear", repeat: Infinity }}
-            >
-              <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
-            </motion.div>
-
-            <motion.div
-              className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
-              animate={{ x: ["42%", "64%"] }}
-              transition={{ duration: 3, ease: "linear", repeat: Infinity }}
-            >
-              <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
-            </motion.div>
-
-            <motion.div
-              className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
-              animate={{ x: ["63%", "84%"] }}
-              transition={{ duration: 3, ease: "linear", repeat: Infinity }}
-            >
-              <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
-            </motion.div>
-            <div className="hidden lg:block absolute top-5 right-0 w-24 h-10 bg-white z-1" />
-            <div className="hidden lg:block absolute top-5 left-0 w-24 h-10 bg-white z-1" />
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-8 relative z-10">
-              {workProcess.map((step, i) => (
-                <motion.div
-                  key={step.step}
-                  custom={i}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-
-                  className="flex flex-col items-center text-center"
-                >
-                  <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center mb-4 shadow-lg">
-                    {/* <span className="text-white font-heading font-bold text-lg">
-                      {step.step}
-                    </span> */}
-                    <Image src={step.imag} width={100} height={100} alt="step" className="w-8 h-8" />
-
-                  </div>
-                  <h3 className="font-heading text-lg font-semibold mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {step.desc}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8) WHY YOU NEED INTERIOR SERVICES */}
-      <section className="section-padding bg-muted/30">
-        <div className="container-narrow">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-            >
-              <span className="text-primary font-medium text-sm uppercase tracking-widest mb-3 block">
-                The Value of Design
-              </span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6">
-                Why You Need{" "}
-                <span className="text-primary">Interior Services</span>
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-8">
-                Professional interior design goes far beyond aesthetics. It
-                shapes how you feel in your home every single day — boosting
-                your mood, productivity, and overall quality of life.
-              </p>
-              <div className="space-y-5">
-                {interiorBenefits.map((b: any, i) => (
-                  <motion.div
-                    key={b.title}
-                    custom={i}
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    className="flex gap-4"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      {i === 0 ? <b.icon size={18} className="text-primary" /> : <Image src={b?.icon} alt="icon" width={100} height={100} className="w-5 h-5" />}
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">{b.title}</h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">
-                        {b.desc}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            <div
-              // initial={{ opacity: 0, x: 40 }}
-              // whileInView={{ opacity: 1, x: 0 }}
-              // viewport={{ once: true }}
-              // transition={{ duration: 0.7 }}
-              className="relative rounded-2xl overflow-hidden aspect-[4/4]"
-            >
-              <Image
-                src="/images/interior-bedroom.jpg"
-                alt="Why you need interior services"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 9) OUR SUCCESS JOURNEY */}
-      {/* use in sfuture */}
-      {/* <section className="section-padding">
-        <div className="container-narrow">
-          <SectionHeading
-            subtitle="Our Story"
-            title="Our Success Journey"
-            description="From a small studio to an award-winning interior design firm — here's how we grew."
-          />
-          <div className="relative">
-            <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-border hidden md:block" />
-            <div className="space-y-8 md:space-y-0">
-              {successMilestones.map((m, i) => (
-                <motion.div
-                  key={m.year}
-                  custom={i}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className={`md:grid md:grid-cols-2 md:gap-12 items-center ${i % 2 === 0 ? "" : "md:[&>*:first-child]:order-2"}`}
-                >
-                  <div className={`mb-4 md:mb-0 ${i % 2 === 0 ? "md:text-right" : ""}`}>
-                    <span className="inline-block text-primary font-heading text-2xl font-bold bg-primary/10 px-4 py-1 rounded-full mb-2">
-                      {m.year}
+                <div className="relative z-10 p-2 sm:p-0">
+                  <div className="flex items-center gap-4 mb-6">
+                    <span className="w-8 lg:w-16 h-px bg-primary/60" />
+                    <span className="text-primary font-medium tracking-widest uppercase text-xs lg:text-sm">
+                      Phase {String(i + 1).padStart(2, '0')}
                     </span>
-                    <h3 className="font-heading text-xl font-semibold mb-2">{m.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{m.desc}</p>
                   </div>
-                  <div className="hidden md:flex justify-center">
-                    <div className="w-4 h-4 rounded-full bg-primary border-4 border-background shadow" />
-                  </div>
-                </motion.div>
-              ))}
+
+                  <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
+                    {sec.title}
+                  </h2>
+                  <p className="text-muted-foreground/90 leading-relaxed whitespace-pre-line text-[15px] lg:text-[17px] font-body">
+                    {sec.desc}
+                  </p>
+
+                  {i === pdfSections.length - 1 && (
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="mt-10 lg:mt-12 inline-block"
+                    >
+                      <Link
+                        href="/contact"
+                        className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-primary/30"
+                      >
+                        Start Your Project
+                        <ArrowRight size={18} />
+                      </Link>
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
             </div>
-          </div>
+          ))}
         </div>
-      </section> */}
+      </div>
+    </div>
+  );
+}
 
-      {/* 10) REVIEWS CAROUSEL */}
+export default function HomePage() {
+  useSeoMeta("home");
+  return (
+    <Layout>
+      <VideoSection />
+      <PDFSectionsRenderer />
+      <GallerySlider />
       <ReviewsCarousel />
-
-      {/* 11) FAQs */}
       <FAQSection />
-
-      {/* 12) GET IN TOUCH – half-scroll popup */}
       <GetInTouchPopup />
-
-      {/* 13) FOOTER is rendered by Layout automatically */}
     </Layout>
   );
 }
