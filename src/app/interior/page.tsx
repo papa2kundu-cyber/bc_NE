@@ -50,10 +50,10 @@ export default function InteriorPage() {
     <Layout>
       <section className="section-padding bg-muted/30">
         <div className="container-narrow">
-          <SectionHeading 
-            subtitle="Interior Services" 
-            title="Your Decor Needs an Upgrade? We’re in!" 
-            description="In a generation where tradition walks with modernity, interior design isn't about furniture or colours anymore. So here we are, as luxury interior designers in Kolkata, who create beyond the same-old conception. We fascinate our customers by creating their personal space, radiant with warmth and aesthetic to their eyes." 
+          <SectionHeading
+            subtitle="Interior Services"
+            title="Your Decor Needs an Upgrade? We're in!"
+            description="In a generation where tradition walks with modernity, interior design isn't about furniture or colours anymore. So here we are, as luxury interior designers in Kolkata, who create beyond the same-old conception. We fascinate our customers by creating their personal space, radiant with warmth and aesthetic to their eyes."
           />
         </div>
       </section>
@@ -104,11 +104,11 @@ export default function InteriorPage() {
 
       <section className="section-padding">
         <div className="container-narrow text-center">
-          <SectionHeading 
-            title="Where To Find Us?" 
+          <SectionHeading
+            title="Where To Find Us?"
             description="If you’ve been searching for luxury interior designers in Kolkata or even exploring options like cheap and best interior designers in Kolkata, then you're in the right spot."
           />
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -116,17 +116,17 @@ export default function InteriorPage() {
           >
             <div className="flex items-center gap-3 bg-muted/50 px-6 py-4 rounded-full text-left">
               <div className="bg-primary/10 p-3 rounded-full text-primary shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground whitespace-nowrap">Call Us Today</p>
                 <p className="font-semibold whitespace-nowrap">74391-33325 / 9875426319</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3 bg-muted/50 px-6 py-4 rounded-full text-left">
               <div className="bg-primary/10 p-3 rounded-full text-primary shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /><circle cx="12" cy="10" r="3" /></svg>
               </div>
               <div className="max-w-[200px] sm:max-w-none">
                 <p className="text-sm text-muted-foreground">Visit Us At</p>

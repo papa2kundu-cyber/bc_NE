@@ -34,7 +34,7 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import { ratingService } from "@/services";
 import { seedReviews } from "@/lib/adminStore";
-import { metadata } from "./layout";
+// import { metadataMap } from "./layout";
 const lineGrow = "/images/lineGrow.svg";
 
 const discovery = "/images/aboutIcon/discovery.svg";
@@ -699,6 +699,141 @@ function ReviewsCarousel() {
   );
 }
 
+function WhyChooseUs() {
+  return (
+    <section className="section-padding bg-foreground text-background">
+      <div className="container-narrow">
+        <SectionHeading
+          subtitle="Our Commitment"
+          title="Why Choose Us"
+          classNameT="!text-white"
+          description="We combine creativity with discipline to deliver design experiences that exceed expectations."
+        />
+        {/* Stats bar */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 text-center">
+          {whyChooseUs.map((s, i) => (
+            <motion.div
+              key={s.label}
+              custom={i}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <div className="text-4xl font-heading font-bold text-primary">
+                {/* {s.num} */}
+                <Counter endValue={parseInt(s.num)} />+
+              </div>
+              <div className="text-background/70 text-sm mt-1">{s.label}</div>
+            </motion.div>
+          ))}
+        </div>
+        {/* Reasons */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {whyChooseReasons.map((r, i) => (
+            <motion.div
+              key={r.title}
+              custom={i}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="bg-background/5 border border-background/10 rounded-xl p-6 hover:bg-background/10 transition-colors"
+            >
+              <r.icon size={28} className="text-primary mb-3" />
+              <h3 className="font-heading text-lg font-semibold mb-2">
+                {r.title}
+              </h3>
+              <p className="text-background/70 text-sm leading-relaxed">
+                {r.desc}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function WorkProcess() {
+  return (
+    <section className="section-padding">
+      <div className="container-narrow">
+        <SectionHeading
+          subtitle="How We Work"
+          title="Work Process"
+          description="A transparent, collaborative process from first conversation to final reveal."
+        />
+        <div className="relative">
+          {/* Connector line for desktop */}
+          <div className="hidden lg:block absolute top-10 left-0 right-0 h-0.5 bg-border z-0" />
+          <motion.div
+            className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
+            animate={{ x: ["0%", "22%"] }}
+            transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+          >
+            <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
+          </motion.div>
+
+          <motion.div
+            className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
+            animate={{ x: ["20%", "44%"] }}
+            transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+          >
+            <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
+          </motion.div>
+
+          <motion.div
+            className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
+            animate={{ x: ["42%", "64%"] }}
+            transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+          >
+            <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
+          </motion.div>
+
+          <motion.div
+            className="hidden lg:flex gap-1 absolute top-10 left-0 right-0 z-1"
+            animate={{ x: ["63%", "84%"] }}
+            transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+          >
+            <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
+          </motion.div>
+          <div className="hidden lg:block absolute top-5 right-0 w-24 h-10 bg-white z-1" />
+          <div className="hidden lg:block absolute top-5 left-0 w-24 h-10 bg-white z-1" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-8 relative z-10">
+            {workProcess.map((step, i) => (
+              <motion.div
+                key={step.step}
+                custom={i}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+
+                className="flex flex-col items-center text-center"
+              >
+                <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center mb-4 shadow-lg">
+                  {/* <span className="text-white font-heading font-bold text-lg">
+                      {step.step}
+                    </span> */}
+                  <Image src={step.imag} width={100} height={100} alt="step" className="w-8 h-8" />
+
+                </div>
+                <h3 className="font-heading text-lg font-semibold mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {step.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 const pdfSections = [
   {
     title: "Welcome to Brightocity Interior",
@@ -948,13 +1083,16 @@ function PDFSectionsRenderer() {
 }
 
 export default function HomePage() {
-  useSeoMeta("home");
+  // useSeoMeta("home");
+  // metadataMap?.home
   return (
     <Layout>
       <VideoSection />
       <PDFSectionsRenderer />
       <GallerySlider />
       <ReviewsCarousel />
+      <WhyChooseUs />
+      <WorkProcess />
       <FAQSection />
       <GetInTouchPopup />
     </Layout>
