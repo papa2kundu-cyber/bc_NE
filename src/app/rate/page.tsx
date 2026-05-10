@@ -9,7 +9,6 @@ import { Star, Send, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { appendReview } from "@/lib/reviewStore";
 import Image from "next/image";
-import logo from "../../../public/images/logo.png";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 function StarRatingInput({ value, onChange }: { value: number; onChange: (v: number) => void }) {
@@ -171,7 +170,7 @@ export default function RatePage() {
     <Layout>
       <section className="pb-8 px-4">
         <div className="w-full flex justify-center pb-6">
-          <Image src={logo} alt="logo" width={1920} height={1080} className="w-64 h-auto" />
+          <Image src={"/images/logo.png"} alt="logo" width={1920} height={1080} className="w-64 h-auto" />
         </div>
         <div className="container mx-auto max-w-2xl">
           <SectionHeading
