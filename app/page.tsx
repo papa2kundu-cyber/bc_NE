@@ -375,7 +375,7 @@ function GallerySlider() {
 }
 
 function FAQSection() {
-  const [open, setOpen] = useState<number | null>(null);
+  const [open, setOpen] = useState<number | null>(0);
   return (
     <section className="py-24 relative bg-background">
       <div className="container-narrow max-w-3xl relative z-10">
@@ -396,7 +396,7 @@ function FAQSection() {
               className={`rounded-2xl transition-all duration-300 border ${open === i ? 'bg-card border-primary/30 shadow-lg shadow-primary/5' : 'bg-transparent border-border hover:border-primary/30'}`}
             >
               <button
-                onClick={() => setOpen(open === i ? null : i)}
+                onClick={() => setOpen(open === i ? 0 : i)}
                 className="w-full flex items-center justify-between px-6 py-5 md:px-8 md:py-6 text-left group"
               >
                 <span className={`font-semibold text-base md:text-lg transition-colors ${open === i ? 'text-primary' : 'text-foreground group-hover:text-primary'}`}>
@@ -889,7 +889,7 @@ const pdfSections = [
 
 function PDFSectionsRenderer() {
   return (
-    <div className="flex flex-col gap-24 pb-24 bg-background relative overflow-hidden">
+    <div className="flex flex-col gap-24 pb-24 bg-background relative overflow-hidden section-padding">
       <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent hidden lg:block -translate-x-1/2" />
 
       {/* 2) ABOUT US */}
@@ -1007,8 +1007,8 @@ function PDFSectionsRenderer() {
           />
         </div>
 
-        <div className="flex flex-col gap-28 md:gap-40 mt-12">
-          {pdfSections.map((sec, i) => (
+        <div className="flex flex-col gap-28 lg:gap-40 mt-12">
+          {pdfSections.slice(0, 5).map((sec, i) => (
             <div key={i} className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center relative group`}>
 
               <motion.div
@@ -1047,6 +1047,89 @@ function PDFSectionsRenderer() {
                     <span className="w-8 lg:w-16 h-px bg-primary/60" />
                     <span className="text-primary font-medium tracking-widest uppercase text-xs lg:text-sm">
                       Phase {String(i + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+
+                  {i === 2 ? <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
+                    {sec.title}
+                  </h1> : <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
+                    {sec.title}
+                  </h2>}
+                  <p className="text-muted-foreground/90 leading-relaxed whitespace-pre-line text-[15px] lg:text-[17px] font-body">
+                    {sec.desc}
+                  </p>
+
+                  {i === pdfSections.length - 1 && (
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="mt-10 lg:mt-12 inline-block"
+                    >
+                      <Link
+                        href="/contact"
+                        className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-primary/30"
+                      >
+                        Start Your Project
+                        <ArrowRight size={18} />
+                      </Link>
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PDFSectionsRenderer2() {
+  return (
+    <div className="flex flex-col gap-24 pb-24 bg-background relative overflow-hidden section-padding">
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent hidden lg:block -translate-x-1/2" />
+
+      <div className="container-narrow relative z-10">
+        <div className="flex flex-col gap-28 lg:gap-40 mt-12">
+          {pdfSections.slice(5, pdfSections.length).map((sec, i) => (
+            <div key={i} className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center relative group`}>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className={`lg:col-span-7 relative ${i % 2 !== 0 ? 'lg:order-2 lg:col-start-6' : 'lg:col-start-1'}`}
+              >
+                <div className={`absolute inset-0 border border-primary/30 rounded-2xl transition-transform duration-700 -z-10 bg-transparent ${i % 2 !== 0 ? '-translate-x-4 translate-y-4 group-hover:-translate-x-6 group-hover:translate-y-6' : 'translate-x-4 translate-y-4 group-hover:translate-x-6 group-hover:translate-y-6'}`} />
+
+                <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[5/4] shadow-2xl z-10 bg-muted">
+                  <div className="absolute inset-0 bg-primary/5 mix-blend-overlay z-10 transition-opacity duration-500 group-hover:opacity-0" />
+                  <Image
+                    src={sec.img}
+                    alt={sec.title}
+                    fill
+                    className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-110"
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: i % 2 !== 0 ? 30 : -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+                className={`lg:col-span-5 relative z-20 ${i % 2 !== 0 ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-8'}`}
+              >
+                <div className={`absolute -top-16 lg:-top-24 ${i % 2 !== 0 ? 'right-0 lg:right-auto lg:left-0' : 'left-0 lg:left-auto lg:-right-8'} text-[8rem] lg:text-[12rem] font-heading font-black text-primary/5 select-none pointer-events-none leading-none -z-10`}>
+                  {String(i + 5).padStart(2, '0')}
+                </div>
+
+                <div className="relative z-10 p-2 sm:p-0">
+                  <div className="flex items-center gap-4 mb-6">
+                    <span className="w-8 lg:w-16 h-px bg-primary/60" />
+                    <span className="text-primary font-medium tracking-widest uppercase text-xs lg:text-sm">
+                      Phase {String(i + 5).padStart(2, '0')}
                     </span>
                   </div>
 
@@ -1089,10 +1172,11 @@ export default function HomePage() {
     <Layout>
       <VideoSection />
       <PDFSectionsRenderer />
-      <GallerySlider />
-      <ReviewsCarousel />
       <WhyChooseUs />
       <WorkProcess />
+      <GallerySlider />
+      <PDFSectionsRenderer2 />
+      <ReviewsCarousel />
       <FAQSection />
       <GetInTouchPopup />
     </Layout>
