@@ -38,7 +38,7 @@ const SectionHeading = ({
         </span>
       )}
       <h2
-        className={`font-heading text-[40px] hover:text-[42px] duration-300 font-bold text-foreground hover:text-shadow-lg/30 ${classNameT}`}
+        className={`font-heading text-[28px] hover:text-[42px] duration-300 font-bold text-foreground hover:text-shadow-lg/30 ${classNameT}`}
       >
         {title}
       </h2>

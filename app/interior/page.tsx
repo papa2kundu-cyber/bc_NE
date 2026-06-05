@@ -83,7 +83,7 @@ export default function InteriorPage() {
       </section>
 
       <section className="section-padding bg-muted/30">
-        <div className="container">
+        <div className="container " style={{padding:"0"}}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, i) => (
               <motion.div
