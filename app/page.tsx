@@ -47,7 +47,6 @@ const space = "/images/wynis/space.svg";
 const aethetics = "/images/wynis/aethetics.svg";
 const wellbeing = "/images/wynis/wellbeing.svg";
 
-
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({
@@ -260,16 +259,16 @@ function VideoSection() {
         className="absolute top-0 left-0 w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-[#f3f4f4] via-[#ffffffc8]/10 to-transparent pointer-events-none" />
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20 pointer-events-none">
-        <span className="text-foreground/80 text-[10px] sm:text-xs tracking-[0.3em] font-medium uppercase drop-shadow-md">
+      {/* <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20 pointer-events-none"> */}
+        {/* <span className="text-foreground/80 text-[10px] sm:text-xs tracking-[0.3em] font-medium uppercase drop-shadow-md">
           Discover
         </span>
         <motion.div
           animate={{ y: [0, 10, 0], opacity: [0.3, 1, 0.3] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
           className="w-px h-16 bg-gradient-to-b from-primary via-primary/50 to-transparent"
-        />
-      </div>
+        /> */}
+      {/* </div> */}
     </section>
   );
 }
@@ -328,7 +327,7 @@ function GallerySlider() {
                     <div className="flex items-center gap-3 mb-3">
                       <span className="w-8 h-px bg-primary/80" />
                       <span className="text-primary font-medium tracking-widest text-xs uppercase">
-                        Project {String(current + 1).padStart(2, '0')}
+                        Project {String(current + 1).padStart(2, "0")}
                       </span>
                     </div>
                     <h3 className="font-heading text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-md">
@@ -362,7 +361,9 @@ function GallerySlider() {
               <button
                 key={i}
                 onClick={() => setCurrent(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? "bg-primary w-8" : "bg-white/20 w-2 hover:bg-white/40"
+                className={`h-1.5 rounded-full transition-all duration-300 ${i === current
+                  ? "bg-primary w-8"
+                  : "bg-white/20 w-2 hover:bg-white/40"
                   }`}
                 aria-label={`Go to slide ${i + 1}`}
               />
@@ -384,7 +385,7 @@ function FAQSection() {
           title="FAQs"
           description="Everything you need to know before starting your design journey."
         />
-        <div className="space-y-4 mt-12">
+        <div className="space-y-4 mt-12 p-4">
           {faqs.map((faq, i) => (
             <motion.div
               key={i}
@@ -393,21 +394,21 @@ function FAQSection() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
-              className={`rounded-2xl transition-all duration-300 border ${open === i ? 'bg-card border-primary/30 shadow-lg shadow-primary/5' : 'bg-transparent border-border hover:border-primary/30'}`}
+              className={`rounded-2xl transition-all duration-300 border  ${open === i ? "bg-card border-primary/30 shadow-lg shadow-primary/5" : "bg-transparent border-border hover:border-primary/30 "} bg-red-700 `}
             >
               <button
                 onClick={() => setOpen(open === i ? 0 : i)}
                 className="w-full flex items-center justify-between px-6 py-5 md:px-8 md:py-6 text-left group"
               >
-                <span className={`font-semibold text-base md:text-lg transition-colors ${open === i ? 'text-primary' : 'text-foreground group-hover:text-primary'}`}>
+                <span
+                  className={`font-semibold text-base md:text-lg transition-colors ${open === i ? "text-primary" : "text-foreground group-hover:text-primary"}`}
+                >
                   {faq.q}
                 </span>
-                <span className={`shrink-0 ml-4 flex items-center justify-center w-8 h-8 rounded-full transition-colors ${open === i ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'}`}>
-                  {open === i ? (
-                    <Minus size={16} />
-                  ) : (
-                    <Plus size={16} />
-                  )}
+                <span
+                  className={`shrink-0 ml-4 flex items-center justify-center w-8 h-8 rounded-full transition-colors ${open === i ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"}`}
+                >
+                  {open === i ? <Minus size={16} /> : <Plus size={16} />}
                 </span>
               </button>
               <AnimatePresence>
@@ -572,14 +573,17 @@ function ReviewsCarousel() {
     apiReviews && apiReviews.length > 0
       ? apiReviews
       : seedReviews.filter((r) => r.allowed)
-  ) as Array<{ id: string | number; name: string; rating?: number; description?: string }>;
+  ) as Array<{
+    id: string | number;
+    name: string;
+    rating?: number;
+    description?: string;
+  }>;
 
   const [current, setCurrent] = useState(0);
 
-  const prev = () =>
-    setCurrent((c) => (c === 0 ? reviews.length - 1 : c - 1));
-  const next = () =>
-    setCurrent((c) => (c === reviews.length - 1 ? 0 : c + 1));
+  const prev = () => setCurrent((c) => (c === 0 ? reviews.length - 1 : c - 1));
+  const next = () => setCurrent((c) => (c === reviews.length - 1 ? 0 : c + 1));
 
   useEffect(() => {
     if (reviews.length <= 1) return;
@@ -611,14 +615,14 @@ function ReviewsCarousel() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -30, scale: 0.98 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="bg-card/80 backdrop-blur border border-border/60 rounded-[2.5rem] p-10 md:p-16 shadow-2xl relative"
+              className="bg-card/80 backdrop-blur border border-border/60 rounded-[2.5rem] p-6 md:p-16 shadow-2xl relative"
             >
               <Quote
-                size={80}
+                size={56}
                 className="absolute top-8 left-8 text-primary/10 rotate-180 pointer-events-none"
               />
               <Quote
-                size={80}
+                size={56}
                 className="absolute bottom-8 right-8 text-primary/10 pointer-events-none"
               />
 
@@ -637,12 +641,13 @@ function ReviewsCarousel() {
                   ))}
                 </div>
 
-                <p className="text-foreground text-xl md:text-2xl font-heading leading-relaxed mb-10 text-balance">
-                  &ldquo;{review.description ?? "Great service and design!"}&rdquo;
+                <p className="text-foreground text-lg md:text-2xl font-heading leading-relaxed mb-10 text-balance">
+                  &ldquo;{review.description ?? "Great service and design!"}
+                  &rdquo;
                 </p>
 
                 <div className="flex items-center justify-center gap-4">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground flex items-center justify-center font-bold text-xl shadow-lg ring-4 ring-primary/10">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground flex items-center justify-center font-bold text-xl shadow-lg ring-4 ring-primary/10">
                     {review.name?.charAt(0).toUpperCase() ?? "?"}
                   </div>
                   <div className="text-left text-sm">
@@ -666,14 +671,20 @@ function ReviewsCarousel() {
                 aria-label="Previous review"
                 className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 shadow-xl group"
               >
-                <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
+                <ChevronLeft
+                  size={20}
+                  className="group-hover:-translate-x-0.5 transition-transform"
+                />
               </button>
               <button
                 onClick={next}
                 aria-label="Next review"
                 className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 shadow-xl group"
               >
-                <ChevronRight size={20} className="group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight
+                  size={20}
+                  className="group-hover:translate-x-0.5 transition-transform"
+                />
               </button>
             </>
           )}
@@ -752,7 +763,7 @@ function WhyChooseUs() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 function WorkProcess() {
@@ -772,7 +783,13 @@ function WorkProcess() {
             animate={{ x: ["0%", "22%"] }}
             transition={{ duration: 3, ease: "linear", repeat: Infinity }}
           >
-            <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
+            <Image
+              src={lineGrow}
+              width={100}
+              height={100}
+              alt="lineGrow"
+              className="h-0.5 w-auto"
+            />
           </motion.div>
 
           <motion.div
@@ -780,7 +797,13 @@ function WorkProcess() {
             animate={{ x: ["20%", "44%"] }}
             transition={{ duration: 3, ease: "linear", repeat: Infinity }}
           >
-            <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
+            <Image
+              src={lineGrow}
+              width={100}
+              height={100}
+              alt="lineGrow"
+              className="h-0.5 w-auto"
+            />
           </motion.div>
 
           <motion.div
@@ -788,7 +811,13 @@ function WorkProcess() {
             animate={{ x: ["42%", "64%"] }}
             transition={{ duration: 3, ease: "linear", repeat: Infinity }}
           >
-            <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
+            <Image
+              src={lineGrow}
+              width={100}
+              height={100}
+              alt="lineGrow"
+              className="h-0.5 w-auto"
+            />
           </motion.div>
 
           <motion.div
@@ -796,7 +825,13 @@ function WorkProcess() {
             animate={{ x: ["63%", "84%"] }}
             transition={{ duration: 3, ease: "linear", repeat: Infinity }}
           >
-            <Image src={lineGrow} width={100} height={100} alt="lineGrow" className="h-0.5 w-auto" />
+            <Image
+              src={lineGrow}
+              width={100}
+              height={100}
+              alt="lineGrow"
+              className="h-0.5 w-auto"
+            />
           </motion.div>
           <div className="hidden lg:block absolute top-5 right-0 w-24 h-10 bg-white z-1" />
           <div className="hidden lg:block absolute top-5 left-0 w-24 h-10 bg-white z-1" />
@@ -809,15 +844,19 @@ function WorkProcess() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-
                 className="flex flex-col items-center text-center"
               >
                 <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center mb-4 shadow-lg">
                   {/* <span className="text-white font-heading font-bold text-lg">
                       {step.step}
                     </span> */}
-                  <Image src={step.imag} width={100} height={100} alt="step" className="w-8 h-8" />
-
+                  <Image
+                    src={step.imag}
+                    width={100}
+                    height={100}
+                    alt="step"
+                    className="w-8 h-8"
+                  />
                 </div>
                 <h3 className="font-heading text-lg font-semibold mb-2">
                   {step.title}
@@ -831,65 +870,65 @@ function WorkProcess() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 const pdfSections = [
   {
     title: "Welcome to Brightocity Interior",
     desc: "Welcome to Brightocity Interior, where we turn your everyday corner into something truly aesthetic. Being the best interior designers in Kolkata, we customise your comfort zone in a way that reflects your personality while hugging luxury design elements. Each of our projects has its own story towards perfection blended with class, style, and practicality.",
-    img: "/images/about-team.jpg"
+    img: "/images/about-team.jpg",
   },
   {
     title: "Why Should Interiors Be Well-designed?",
     desc: "Your choice in Interiors defines your lifestyle. A space covered with suitable interiors brings positivity and peace to the environment. Applying suitable shades, lights, and layout lightens your mood, reduces stress levels, and mirrors your personal choice. Overall, it manages your home or workspace both functionally and emotionally for family & guests.",
-    img: "/images/interior-bedroom.jpg"
+    img: "/images/interior-bedroom.jpg",
   },
   {
     title: "Your Dream Decor Deserves The Best Interior Designers in Kolkata",
     desc: "The best interior designers in Kolkata are fully aware of coordinating furniture and decor with technical knowledge to advance usability & safety. We are the leading interior design company in Kolkata, who believe every space deserves proper attention.",
-    img: "/images/hero-living.jpg"
+    img: "/images/hero-living.jpg",
   },
   {
     title: "How We Approach Interior Design To You",
     desc: "Our approach starts with noting down your requirements and ends with making it a reality through inspiring & functional enough interiors. Each task is done by the best interior designers in Kolkata. Hence, the results are not just visually stunning but also thoughtfully made.",
-    img: "/images/interior-kitchen.jpg"
+    img: "/images/interior-kitchen.jpg",
   },
   {
     title: "Service for Both Residential & Commercial Projects",
     desc: "Be it a residential design or a commercial one, our team will take the lead so that you don't worry about a thing. As one of the best interior decorators in Kolkata, we pick the correct textures, colours, and materials for a warm, sophisticated space. That way, it lasts long even after having premium finish.",
-    img: "/images/interior-office.jpg"
+    img: "/images/interior-office.jpg",
   },
   {
     title: "Process That Is Client-centric and Hassle-free",
     desc: "Partnering with the best interior designers in Kolkata covers a smooth process with the final setup. We schedule meetups with our clients to make sure their expectations meet our capabilities. As trusted interior designers & decorators in Kolkata, we know how to balance between innovation and functionality for the best outcome possible.",
-    img: "/images/interior-bathroom.jpg"
+    img: "/images/interior-bathroom.jpg",
   },
   {
     title: "Where Experiences Talk",
     desc: "The expertise we have handles numerous projects on modern apartments and premium corporate spaces. Our interior design company in Kolkata guarantees a meticulously planned delivery & execution, which eventually gained the trust of millions. This consistency is the reason behind our reputation as one of the best interior designers in Kolkata till now.",
-    img: "/images/hero-living.jpg"
+    img: "/images/hero-living.jpg",
   },
   {
     title: "Meticulous Finish",
     desc: "Our determination for a result you can't turn your head from has earned us the title of luxury interior designers in Kolkata. Moreover, luxury isn't just a word for us. It lives in the details, and our team makes sure to prove it through refinement in every sense. As a result, we’ve become the best interior designers in Kolkata for our clients, who never compromise on quality.",
-    img: "/images/interior-bedroom.jpg"
+    img: "/images/interior-bedroom.jpg",
   },
   {
     title: "A Blend of Convenience & Trend",
     desc: "We always keep convenience in mind while showing off class in each interior we design for you. It is our greatest pleasure to be counted among the best interior decorators in Kolkata for designing aesthetic and easy-to-live-in spaces. Dedicated interior designers & decorators in Kolkata, give every project its own unique character while keeping everything to your choice.",
-    img: "/images/interior-kitchen.jpg"
+    img: "/images/interior-kitchen.jpg",
   },
   {
     title: "Invest in Good Hands",
     desc: "Once you pick the best interior designers in Kolkata, you invest in only the best quality and creativity. Our work is our identity which reflects on how we decorate your personal space. So, let us design you such interiors that can both inspire & impress you.\n\nIf you're ready to live in a space you'll want to keep looking back to, then let us know. We're just a call away.",
-    img: "/images/about-team.jpg"
-  }
+    img: "/images/about-team.jpg",
+  },
 ];
 
 function PDFSectionsRenderer() {
   return (
-    <div className="flex flex-col gap-24 pb-24 bg-background relative overflow-hidden section-padding">
+    <div className="flex flex-col gap-24 pb-24 bg-background relative overflow-hidden">
       <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent hidden lg:block -translate-x-1/2" />
 
       {/* 2) ABOUT US */}
@@ -911,7 +950,7 @@ function PDFSectionsRenderer() {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute bottom-6 left-6 bg-primary text-white rounded-xl px-5 py-3 shadow-lg">
+                <div className="absolute bottom-6 left-6 bg-primary text-white rounded-xl px-5 py-3 shadow-lg ">
                   <div className="text-3xl font-bold font-heading">15+</div>
                   <div className="text-sm">Years of Excellence</div>
                 </div>
@@ -988,8 +1027,8 @@ function PDFSectionsRenderer() {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute bottom-6 left-6 bg-primary text-white rounded-xl px-5 py-3 shadow-lg">
-                  <div className="text-3xl font-bold font-heading">15+</div>
+                <div className="absolute -bottom-1 right-1 bg-primary text-white rounded-xl px-2 py-1 shadow-lg z-20 mb-2">
+                  <div className="text-2xl font-bold font-heading ">15+</div>
                   <div className="text-sm">Years of Excellence</div>
                 </div>
               </motion.div>
@@ -1008,17 +1047,21 @@ function PDFSectionsRenderer() {
         </div>
 
         <div className="flex flex-col gap-28 lg:gap-40 mt-12">
-          {pdfSections.slice(0, 5).map((sec, i) => (
-            <div key={i} className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center relative group`}>
-
+          {pdfSections.slice(0, 2).map((sec, i) => (
+            <div
+              key={i}
+              className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center relative group`}
+            >
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className={`lg:col-span-7 relative ${i % 2 !== 0 ? 'lg:order-2 lg:col-start-6' : 'lg:col-start-1'}`}
+                className={`lg:col-span-7 relative ${i % 2 !== 0 ? "lg:order-2 lg:col-start-6" : "lg:col-start-1"}`}
               >
-                <div className={`absolute inset-0 border border-primary/30 rounded-2xl transition-transform duration-700 -z-10 bg-transparent ${i % 2 !== 0 ? '-translate-x-4 translate-y-4 group-hover:-translate-x-6 group-hover:translate-y-6' : 'translate-x-4 translate-y-4 group-hover:translate-x-6 group-hover:translate-y-6'}`} />
+                <div
+                  className={`absolute inset-0 border border-primary/30 rounded-2xl transition-transform duration-700 -z-10 bg-transparent ${i % 2 !== 0 ? "-translate-x-4 translate-y-4 group-hover:-translate-x-6 group-hover:translate-y-6" : "translate-x-4 translate-y-4 group-hover:translate-x-6 group-hover:translate-y-6"}`}
+                />
 
                 <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[5/4] shadow-2xl z-10 bg-muted">
                   <div className="absolute inset-0 bg-primary/5 mix-blend-overlay z-10 transition-opacity duration-500 group-hover:opacity-0" />
@@ -1036,25 +1079,220 @@ function PDFSectionsRenderer() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-                className={`lg:col-span-5 relative z-20 ${i % 2 !== 0 ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-8'}`}
+                className={`lg:col-span-5 relative z-20 ${i % 2 !== 0 ? "lg:order-1 lg:col-start-1" : "lg:col-start-8"}`}
               >
-                <div className={`absolute -top-16 lg:-top-24 ${i % 2 !== 0 ? 'right-0 lg:right-auto lg:left-0' : 'left-0 lg:left-auto lg:-right-8'} text-[8rem] lg:text-[12rem] font-heading font-black text-primary/5 select-none pointer-events-none leading-none -z-10`}>
-                  {String(i + 1).padStart(2, '0')}
+                <div
+                  className={`absolute -top-16 lg:-top-24 ${i % 2 !== 0 ? "right-0 lg:right-auto lg:left-0" : "left-0 lg:left-auto lg:-right-8"} text-[8rem] lg:text-[12rem] font-heading font-black text-primary/5 select-none pointer-events-none leading-none -z-10`}
+                >
+                  {String(i + 1).padStart(2, "0")}
                 </div>
 
                 <div className="relative z-10 p-2 sm:p-0">
-                  <div className="flex items-center gap-4 mb-6">
+                  {/* <div className="flex items-center gap-4 mb-6">
                     <span className="w-8 lg:w-16 h-px bg-primary/60" />
                     <span className="text-primary font-medium tracking-widest uppercase text-xs lg:text-sm">
-                      Phase {String(i + 1).padStart(2, '0')}
+                      Phase {String(i + 1).padStart(2, "0")}
                     </span>
-                  </div>
+                  </div> */}
 
-                  {i === 2 ? <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
-                    {sec.title}
-                  </h1> : <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
-                    {sec.title}
-                  </h2>}
+                  {i === 2 ? (
+                    <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
+                      {sec.title}
+                    </h1>
+                  ) : (
+                    <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
+                      {sec.title}
+                    </h2>
+                  )}
+                  <p className="text-muted-foreground/90 leading-relaxed whitespace-pre-line text-[15px] lg:text-[17px] font-body">
+                    {sec.desc}
+                  </p>
+
+                  {i === pdfSections.length - 1 && (
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="mt-10 lg:mt-12 inline-block"
+                    >
+                      <Link
+                        href="/contact"
+                        className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-primary/30"
+                      >
+                        Start Your Project
+                        <ArrowRight size={18} />
+                      </Link>
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+function PDFSectionsRenderer3() {
+  return (
+    <div className="flex flex-col gap-24 pb-24 bg-background relative overflow-hidden section-padding">
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent hidden lg:block -translate-x-1/2" />
+
+      
+      <div className="container-narrow relative z-10">
+       
+
+        <div className="flex flex-col gap-28 lg:gap-40 mt-12">
+          {pdfSections.slice(2, 5).map((sec, i) => (
+            <div
+              key={i}
+              className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center relative group`}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className={`lg:col-span-7 relative ${i % 2 !== 0 ? "lg:order-2 lg:col-start-6" : "lg:col-start-1"}`}
+              >
+                <div
+                  className={`absolute inset-0 border border-primary/30 rounded-2xl transition-transform duration-700 -z-10 bg-transparent ${i % 2 !== 0 ? "-translate-x-4 translate-y-4 group-hover:-translate-x-6 group-hover:translate-y-6" : "translate-x-4 translate-y-4 group-hover:translate-x-6 group-hover:translate-y-6"}`}
+                />
+
+                <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[5/4] shadow-2xl z-10 bg-muted">
+                  <div className="absolute inset-0 bg-primary/5 mix-blend-overlay z-10 transition-opacity duration-500 group-hover:opacity-0" />
+                  <Image
+                    src={sec.img}
+                    alt={sec.title}
+                    fill
+                    className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-110"
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: i % 2 !== 0 ? 30 : -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+                className={`lg:col-span-5 relative z-20 ${i % 2 !== 0 ? "lg:order-1 lg:col-start-1" : "lg:col-start-8"}`}
+              >
+                <div
+                  className={`absolute -top-16 lg:-top-24 ${i % 2 !== 0 ? "right-0 lg:right-auto lg:left-0" : "left-0 lg:left-auto lg:-right-8"} text-[8rem] lg:text-[12rem] font-heading font-black text-primary/5 select-none pointer-events-none leading-none -z-10`}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+
+                <div className="relative z-10 p-2 sm:p-0">
+                  {/* <div className="flex items-center gap-4 mb-6">
+                    <span className="w-8 lg:w-16 h-px bg-primary/60" />
+                    <span className="text-primary font-medium tracking-widest uppercase text-xs lg:text-sm">
+                      Phase {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div> */}
+
+                  {i === 2 ? (
+                    <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
+                      {sec.title}
+                    </h1>
+                  ) : (
+                    <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
+                      {sec.title}
+                    </h2>
+                  )}
+                  <p className="text-muted-foreground/90 leading-relaxed whitespace-pre-line text-[15px] lg:text-[17px] font-body">
+                    {sec.desc}
+                  </p>
+
+                  {i === pdfSections.length - 1 && (
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="mt-10 lg:mt-12 inline-block"
+                    >
+                      <Link
+                        href="/contact"
+                        className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-primary/30"
+                      >
+                        Start Your Project
+                        <ArrowRight size={18} />
+                      </Link>
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+function PDFSectionsRenderer4() {
+  return (
+    <div className="flex flex-col gap-24 pb-24 bg-background relative overflow-hidden section-padding">
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent hidden lg:block -translate-x-1/2" />
+
+      <div className="container-narrow relative z-10">
+        
+
+        <div className="flex flex-col gap-28 lg:gap-40 mt-12">
+          {pdfSections.slice(5, 7).map((sec, i) => (
+            <div
+              key={i}
+              className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center relative group`}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className={`lg:col-span-7 relative ${i % 2 !== 0 ? "lg:order-2 lg:col-start-6" : "lg:col-start-1"}`}
+              >
+                <div
+                  className={`absolute inset-0 border border-primary/30 rounded-2xl transition-transform duration-700 -z-10 bg-transparent ${i % 2 !== 0 ? "-translate-x-4 translate-y-4 group-hover:-translate-x-6 group-hover:translate-y-6" : "translate-x-4 translate-y-4 group-hover:translate-x-6 group-hover:translate-y-6"}`}
+                />
+
+                <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[5/4] shadow-2xl z-10 bg-muted">
+                  <div className="absolute inset-0 bg-primary/5 mix-blend-overlay z-10 transition-opacity duration-500 group-hover:opacity-0" />
+                  <Image
+                    src={sec.img}
+                    alt={sec.title}
+                    fill
+                    className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-110"
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: i % 2 !== 0 ? 30 : -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+                className={`lg:col-span-5 relative z-20 ${i % 2 !== 0 ? "lg:order-1 lg:col-start-1" : "lg:col-start-8"}`}
+              >
+                <div
+                  className={`absolute -top-16 lg:-top-24 ${i % 2 !== 0 ? "right-0 lg:right-auto lg:left-0" : "left-0 lg:left-auto lg:-right-8"} text-[8rem] lg:text-[12rem] font-heading font-black text-primary/5 select-none pointer-events-none leading-none -z-10`}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+
+                <div className="relative z-10 p-2 sm:p-0">
+                  {/* <div className="flex items-center gap-4 mb-6">
+                    <span className="w-8 lg:w-16 h-px bg-primary/60" />
+                    <span className="text-primary font-medium tracking-widest uppercase text-xs lg:text-sm">
+                      Phase {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div> */}
+
+                  {i === 2 ? (
+                    <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
+                      {sec.title}
+                    </h1>
+                  ) : (
+                    <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
+                      {sec.title}
+                    </h2>
+                  )}
                   <p className="text-muted-foreground/90 leading-relaxed whitespace-pre-line text-[15px] lg:text-[17px] font-body">
                     {sec.desc}
                   </p>
@@ -1091,17 +1329,21 @@ function PDFSectionsRenderer2() {
 
       <div className="container-narrow relative z-10">
         <div className="flex flex-col gap-28 lg:gap-40 mt-12">
-          {pdfSections.slice(5, pdfSections.length).map((sec, i) => (
-            <div key={i} className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center relative group`}>
-
+          {pdfSections.slice(7, pdfSections.length).map((sec, i) => (
+            <div
+              key={i}
+              className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center relative group`}
+            >
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className={`lg:col-span-7 relative ${i % 2 !== 0 ? 'lg:order-2 lg:col-start-6' : 'lg:col-start-1'}`}
+                className={`lg:col-span-7 relative ${i % 2 !== 0 ? "lg:order-2 lg:col-start-6" : "lg:col-start-1"}`}
               >
-                <div className={`absolute inset-0 border border-primary/30 rounded-2xl transition-transform duration-700 -z-10 bg-transparent ${i % 2 !== 0 ? '-translate-x-4 translate-y-4 group-hover:-translate-x-6 group-hover:translate-y-6' : 'translate-x-4 translate-y-4 group-hover:translate-x-6 group-hover:translate-y-6'}`} />
+                <div
+                  className={`absolute inset-0 border border-primary/30 rounded-2xl transition-transform duration-700 -z-10 bg-transparent ${i % 2 !== 0 ? "-translate-x-4 translate-y-4 group-hover:-translate-x-6 group-hover:translate-y-6" : "translate-x-4 translate-y-4 group-hover:translate-x-6 group-hover:translate-y-6"}`}
+                />
 
                 <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[5/4] shadow-2xl z-10 bg-muted">
                   <div className="absolute inset-0 bg-primary/5 mix-blend-overlay z-10 transition-opacity duration-500 group-hover:opacity-0" />
@@ -1119,19 +1361,21 @@ function PDFSectionsRenderer2() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-                className={`lg:col-span-5 relative z-20 ${i % 2 !== 0 ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-8'}`}
+                className={`lg:col-span-5 relative z-20 ${i % 2 !== 0 ? "lg:order-1 lg:col-start-1" : "lg:col-start-8"}`}
               >
-                <div className={`absolute -top-16 lg:-top-24 ${i % 2 !== 0 ? 'right-0 lg:right-auto lg:left-0' : 'left-0 lg:left-auto lg:-right-8'} text-[8rem] lg:text-[12rem] font-heading font-black text-primary/5 select-none pointer-events-none leading-none -z-10`}>
-                  {String(i + 5).padStart(2, '0')}
+                <div
+                  className={`absolute -top-16 lg:-top-24 ${i % 2 !== 0 ? "right-0 lg:right-auto lg:left-0" : "left-0 lg:left-auto lg:-right-8"} text-[8rem] lg:text-[12rem] font-heading font-black text-primary/5 select-none pointer-events-none leading-none -z-10`}
+                >
+                  {String(i + 5).padStart(2, "0")}
                 </div>
 
                 <div className="relative z-10 p-2 sm:p-0">
-                  <div className="flex items-center gap-4 mb-6">
+                  {/* <div className="flex items-center gap-4 mb-6">
                     <span className="w-8 lg:w-16 h-px bg-primary/60" />
                     <span className="text-primary font-medium tracking-widest uppercase text-xs lg:text-sm">
-                      Phase {String(i + 5).padStart(2, '0')}
+                      Phase {String(i + 5).padStart(2, "0")}
                     </span>
-                  </div>
+                  </div> */}
 
                   <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-foreground leading-[1.15]">
                     {sec.title}
@@ -1173,7 +1417,10 @@ export default function HomePage() {
       <VideoSection />
       <PDFSectionsRenderer />
       <WhyChooseUs />
+      <PDFSectionsRenderer3/>
       <WorkProcess />
+      <PDFSectionsRenderer4/>
+
       <GallerySlider />
       <PDFSectionsRenderer2 />
       <ReviewsCarousel />

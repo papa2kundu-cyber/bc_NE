@@ -27,16 +27,65 @@ const Footer = () => {
                 Quick Links
               </h4>
               <div className="space-y-2">
-                {["About Us", "Our Works", "Interior", "Blog"].map((item) => (
-                  <Link
-                    key={item}
-                    href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="block text-sm text-background/70 hover:text-primary transition-colors"
-                  >
-                    {item}
-                  </Link>
-                ))}
-              </div>
+  <Link
+    href="/about"
+    className="block text-sm text-background/70 hover:text-primary transition-colors"
+  >
+    About Us
+  </Link>
+
+  <Link
+    href="/works"
+    className="block text-sm text-background/70 hover:text-primary transition-colors"
+  >
+    Our Works
+  </Link>
+
+  <div className="group">
+    <Link
+      href="/interior"
+      className="block text-sm text-background/70 hover:text-primary transition-colors"
+    >
+      Interior
+    </Link>
+
+    <div className="pl-4 mt-1 space-y-1">
+      <Link
+        href="/interior/bedroom"
+        className="block text-xs text-background/60 hover:text-primary transition-colors"
+      >
+        Bedroom
+      </Link>
+
+      <Link
+        href="/interior/kitchen"
+        className="block text-xs text-background/60 hover:text-primary transition-colors"
+      >
+        Kitchen
+      </Link>
+
+      <Link
+        href="/interior/workspace"
+        className="block text-xs text-background/60 hover:text-primary transition-colors"
+      >
+        Workspace
+      </Link>
+      <Link
+        href="/interior/bathroom"
+        className="block text-xs text-background/60 hover:text-primary transition-colors"
+      >
+        Bathroom
+      </Link>
+    </div>
+  </div>
+
+  <Link
+    href="/blog"
+    className="block text-sm text-background/70 hover:text-primary transition-colors"
+  >
+    Blog
+  </Link>
+</div>
             </div>
 
             <div>

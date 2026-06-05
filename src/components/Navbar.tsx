@@ -12,10 +12,18 @@ const navItems = [
   { label: "Home", path: "/" },
   { label: "About Us", path: "/about" },
   { label: "Our Works", path: "/works" },
-  { label: "Interior", path: "/interior" },
+  {
+    label: "Interior",
+    path: "/interior",
+    children: [
+      { label: "Bedroom", path: "/interior/bedroom" },
+      { label: "Kitchen", path: "/interior/kitchen" },
+      { label: "Workspace", path: "/interior/workspace" }, 
+      { label: "Bathroom", path: "/interior/bathroom" }, 
+    ],
+  },
   { label: "Video Gallery", path: "/video-gallery" },
   { label: "Blog", path: "/blog" },
-  // { label: "Our Team", path: "/teams" },
   { label: "FAQ", path: "/faq" },
   { label: "Contact Us", path: "/contact" },
 ];
@@ -51,18 +59,41 @@ const Navbar = () => {
               >
                 {item.label}
               </Link>
-            ) :
+            ) : 
+item.label==="Interior" ? (
+      <div key={item.path} className="relative group">
+  <Link
+    href="/interior"
+    className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+  >
+    Interior
+  </Link>
 
-              <Link
-                key={item.path}
-                href={item.path}
-                className={`px-3 py-2 text-sm font-medium transition-colors rounded-md ${pathname === item.path
-                  ? "text-primary font-semibold"
-                  : "text-muted-foreground hover:text-foreground"
-                  }`}
-              >
-                {item.label}
-              </Link>
+  <div className="absolute left-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+    {item.children?.map((sub) => (
+      <Link
+        key={sub.path}
+        href={sub.path}
+        className="block px-4 py-3 text-sm hover:bg-muted"
+      >
+        {sub.label}
+      </Link>
+    ))}
+  </div>
+</div>
+):(
+
+  <Link
+  key={item.path}
+  href={item.path}
+  className={`px-3 py-2 text-sm font-medium transition-colors rounded-md ${pathname === item.path
+    ? "text-primary font-semibold"
+    : "text-muted-foreground hover:text-foreground"
+  }`}
+  >
+  {item.label}
+  </Link>
+)
           ))}
           <div className="absolute -bottom-1 right-1 rounded-lg w-[calc(100%_-_85.5%)] h-4 bg-black/30"></div>
         </div>
@@ -95,17 +126,42 @@ const Navbar = () => {
                   className={`block px-3 py-2.5 text-sm font-medium rounded-lg transition-colors text-white bg-primary relative z-10`}
                 >
                   {item.label}
-                </Link> : <Link
+                </Link> : 
+                item.label==="Interior"?(
+                  <div key={item.path} className="relative group">
+  <Link
+    href="/interior"
+    className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+  >
+    Interior
+  </Link>
+
+  <div className="absolute left-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20">
+    {item.children?.map((sub) => (
+  <Link
+    key={sub.path}
+    href={sub.path}
+    className="block pl-8 py-2 text-sm text-muted-foreground"
+  >
+    {sub.label}
+  </Link>
+))}
+  </div>
+</div>
+                ):(
+
+                  <Link
                   key={item.path}
                   href={item.path}
                   onClick={() => setIsOpen(false)}
                   className={`block px-3 py-2.5 text-sm font-medium rounded-md transition-colors ${pathname === item.path
                     ? "text-primary bg-primary/5"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                    }`}
-                >
+                  }`}
+                  >
                   {item.label}
-                </Link>
+                  </Link>
+                )
               ))}
               <div className="absolute bottom-3 left-0 flex justify-center w-full">
                 <div className="rounded-lg w-[calc(100%_-_40px)] h-4 bg-black/30"></div>
