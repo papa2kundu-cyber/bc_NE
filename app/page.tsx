@@ -1037,7 +1037,7 @@ function PDFSectionsRenderer() {
         </section>
       </div>
 
-      <div className="container-narrow relative z-10">
+      <div className="container-narrow relative z-10 section-padding">
         <div className="text-center max-w-3xl mx-auto mb-16 relative">
           <SectionHeading
             subtitle="Our Approach"
