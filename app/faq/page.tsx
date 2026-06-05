@@ -20,9 +20,9 @@ export default function FAQPage() {
   return (
     <Layout>
       <section className="section-padding bg-muted/30">
-        <div className="container-narrow">
+        <h1 className="container-narrow">
           <SectionHeading subtitle="Questions" title="Frequently Asked Questions" description="Find answers to the most common questions about our services." />
-        </div>
+        </h1>
       </section>
 
       <section className="section-padding">

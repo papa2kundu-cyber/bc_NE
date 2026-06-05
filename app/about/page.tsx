@@ -78,9 +78,9 @@ export default function AboutPage() {
     <Layout>
       {/* Hero */}
       <section className="section-padding bg-muted/30">
-        <div className="container-narrow">
+        <h1 className="container-narrow">
           <SectionHeading subtitle="Who We Are" title="About Us" description="We are a passionate team of designers transforming spaces into experiences since 2009." />
-        </div>
+        </h1>
       </section>
 
       {/* Story */}

@@ -34,13 +34,13 @@ export default function KitchenPage() {
   return (
     <Layout>
          <section className="section-padding bg-muted/30">
-                <div className="container-narrow">
+                <h1 className="container-narrow">
                   <SectionHeading
                     subtitle="Interior Services"
                     title="Your Decor Needs an Upgrade? We're in!"
                     description="In a generation where tradition walks with modernity, interior design isn't about furniture or colours anymore. So here we are, as luxury interior designers in Kolkata, who create beyond the same-old conception. We fascinate our customers by creating their personal space, radiant with warmth and aesthetic to their eyes."
                   />
-                </div>
+                </h1>
               </section>
 <section className="section-padding">
         <div className="container-narrow space-y-20">

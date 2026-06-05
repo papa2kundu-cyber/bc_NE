@@ -185,7 +185,7 @@ export default function TeamsPage() {
     <Layout>
       {/* ── Hero / page title ── */}
       <section className="pt-28 pb-14 bg-muted/20">
-        <div className="container-narrow px-4 sm:px-6 lg:px-8">
+        <h1 className="container-narrow px-4 sm:px-6 lg:px-8">
           <SectionHeading
             subtitle="Who We Are"
             title={
@@ -195,7 +195,7 @@ export default function TeamsPage() {
             }
             description="The talented professionals behind every stunning interior. Driven by passion, guided by expertise."
           />
-        </div>
+        </h1>
       </section>
 
       {/* ── Team groups ── */}

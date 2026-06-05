@@ -31,13 +31,13 @@ export default function ContactUs() {
     return (
         <Layout>
             <section className="section-padding bg-muted/30">
-                <div className="container-narrow">
+                <h1 className="container-narrow">
                     <SectionHeading
                         subtitle="Get In Touch"
                         title="Contact Us"
                         description="Ready to start your design journey? We'd love to hear from you."
                     />
-                </div>
+                </h1>
             </section>
 
             <section className="section-padding">
