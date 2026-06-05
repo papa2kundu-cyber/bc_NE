@@ -664,30 +664,30 @@ function ReviewsCarousel() {
             </motion.div>
           </AnimatePresence>
 
-          {reviews.length > 1 && (
+          {/* {reviews.length > 1 && (
             <>
               <button
                 onClick={prev}
                 aria-label="Previous review"
-                className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 shadow-xl group"
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 p-1 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 shadow-xl group"
               >
                 <ChevronLeft
-                  size={20}
+                  size={18}
                   className="group-hover:-translate-x-0.5 transition-transform"
                 />
               </button>
               <button
                 onClick={next}
                 aria-label="Next review"
-                className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 shadow-xl group"
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 p-1 rounded-full bg-background border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 shadow-xl group"
               >
                 <ChevronRight
-                  size={20}
+                  size={18}
                   className="group-hover:translate-x-0.5 transition-transform"
                 />
               </button>
             </>
-          )}
+          )} */}
 
           {reviews.length > 1 && (
             <div className="flex justify-center gap-2 mt-8">

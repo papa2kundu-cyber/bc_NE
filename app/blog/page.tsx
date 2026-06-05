@@ -39,9 +39,9 @@ export default function BlogPage() {
   return (
     <Layout>
       <section className="section-padding bg-muted/30">
-        <div className="container-narrow">
+        <h1 className="container-narrow">
           <SectionHeading subtitle="Insights" title="Our Blog" description="Design inspiration, trends, and expert tips from our team." />
-        </div>
+        </h1>
       </section>
 
       <section className="section-padding">
