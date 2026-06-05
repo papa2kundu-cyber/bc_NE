@@ -16,20 +16,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/interior/bedroom/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/interior/bedroom/page.js"
-    ],
-    "/interior/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/interior/layout.js"
-    ],
-    "/interior/kitchen/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/interior/kitchen/page.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

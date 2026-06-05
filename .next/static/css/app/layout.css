@@ -1990,6 +1990,12 @@ h1, h2, h3, h4, h5, h6 {
 .pl-2{
   padding-left: 0.5rem;
 }
+.pl-4{
+  padding-left: 1rem;
+}
+.pl-8{
+  padding-left: 2rem;
+}
 .pl-9{
   padding-left: 2.25rem;
 }
@@ -2035,12 +2041,6 @@ h1, h2, h3, h4, h5, h6 {
 .pt-8{
   padding-top: 2rem;
 }
-.pl-4{
-  padding-left: 1rem;
-}
-.pl-8{
-  padding-left: 2rem;
-}
 .text-left{
   text-align: left;
 }
@@ -2081,11 +2081,11 @@ h1, h2, h3, h4, h5, h6 {
 .text-\[15px\]{
   font-size: 15px;
 }
+.text-\[28px\]{
+  font-size: 28px;
+}
 .text-\[32px\]{
   font-size: 32px;
-}
-.text-\[40px\]{
-  font-size: 40px;
 }
 .text-\[8rem\]{
   font-size: 8rem;
@@ -2109,9 +2109,6 @@ h1, h2, h3, h4, h5, h6 {
 .text-xs{
   font-size: 0.75rem;
   line-height: 1rem;
-}
-.text-\[28px\]{
-  font-size: 28px;
 }
 .font-black{
   font-weight: 900;
@@ -2180,6 +2177,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 .text-background\/50{
   color: hsl(var(--background) / 0.5);
+}
+.text-background\/60{
+  color: hsl(var(--background) / 0.6);
 }
 .text-background\/70{
   color: hsl(var(--background) / 0.7);
@@ -2307,9 +2307,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 .text-yellow-600\/40{
   color: rgb(202 138 4 / 0.4);
-}
-.text-background\/60{
-  color: hsl(var(--background) / 0.6);
 }
 .underline{
   text-decoration-line: underline;
