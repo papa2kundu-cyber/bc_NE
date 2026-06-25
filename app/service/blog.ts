@@ -1,20 +1,4 @@
-import axios from "axios";
-
-const api=axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-});
-
-
-export const getFaqs = async () => {
-  const response = await api.get("/get-faqs");
-
-  return response.data.data.map(
-    (faq: { question: string; answer: string }) => ({
-      q: faq.question,
-      a: faq.answer,
-    })
-  );
-};
+import { api } from "../lib/api";
 
 export type Post = {
   slug: string;

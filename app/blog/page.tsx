@@ -8,7 +8,8 @@ import Image from "next/image";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { getBlogs } from "../api/route";
+import { getBlogs, Post } from "../service/blog";
+// import { getBlogs,Post } from "../api/route";
 
 export default function BlogPage() {
   useSeoMeta("blog");
