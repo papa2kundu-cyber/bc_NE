@@ -174,7 +174,7 @@ export default function RatePage() {
         </div>
         <div className="container mx-auto max-w-2xl">
           <SectionHeading
-            title={<span>Share Your <span className="text-primary">Experience</span></span>}
+            title={<h1>Share Your <span className="text-primary">Experience</span></h1>}
           // subtitle="We'd love to hear what you think about our services. Your feedback helps us grow!"
           />
           <div className="mt-8">

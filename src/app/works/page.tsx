@@ -45,13 +45,13 @@ export default function WorksPage() {
     <Layout>
       {/* Header */}
       <section className="section-padding bg-muted/30">
-        <div className="container-narrow">
+        <h1 className="container-narrow">
           <SectionHeading
             subtitle="Portfolio"
             title="Our Works"
             description="Explore our curated collection of transformative interior designs."
           />
-        </div>
+        </h1>
       </section>
 
       {/* Content */}
