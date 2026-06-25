@@ -21,9 +21,9 @@ export default function VideoGalleryPage() {
   return (
     <Layout>
       <section className="section-padding bg-muted/30">
-        <div className="container-narrow">
+        <h1 className="container-narrow">
           <SectionHeading subtitle="Watch" title="Video Gallery" description="Step inside our projects through immersive video walkthroughs." />
-        </div>
+        </h1>
       </section>
 
       <section className="section-padding">
