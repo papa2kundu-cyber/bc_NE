@@ -5,7 +5,8 @@ import SectionHeading from "@/components/SectionHeading";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { useQuery } from "@tanstack/react-query";
-import { getFaqs } from "../api/route";
+import { getFaqs } from "../service/faq";
+
 
 type Faq = {
   q: string;
