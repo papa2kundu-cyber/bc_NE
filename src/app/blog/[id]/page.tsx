@@ -45,7 +45,7 @@ export default async function BlogDetailsPage({ params }: Props) {
   const { id } = await params;
 
   const post = await getBlogById(id);
-  console.log(post)
+  // console.log(post)
   if (!post) {
     notFound();
   }
@@ -56,7 +56,7 @@ export default async function BlogDetailsPage({ params }: Props) {
         <div className="container-narrow max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="text-primary text-sm uppercase tracking-widest">
-              {post.category }
+              {post.category.name }
             </span>
 
             <h1 className="font-heading text-4xl md:text-5xl font-bold mt-4 mb-6">

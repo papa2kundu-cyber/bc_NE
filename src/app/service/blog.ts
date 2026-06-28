@@ -9,7 +9,6 @@ export type Post = {
   author: string;
   date: string;
   category: {
-    // id: string;
     name: string;
   };
   content: string;
@@ -30,7 +29,7 @@ export const getBlogs = async (): Promise<Post[]> => {
       day: "numeric",
       year: "numeric",
     }),
-    category: blog.category.name,
+    category: blog.category,
     content: blog.description,
   }));
 };
@@ -55,7 +54,7 @@ export const getBlogById = async (id: string): Promise<Post | null> => {
       day: "numeric",
       year: "numeric",
     }),
-    category: blog.category.name,
+    category: blog.category,
     content: blog.description,
   };
 };

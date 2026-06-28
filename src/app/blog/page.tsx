@@ -69,7 +69,7 @@ if (error) {
 
       <div className="p-6">
         <span className="text-primary text-xs font-medium uppercase tracking-widest">
-          {post.category}
+          {post.category.name}
         </span>
 
         <h3 className="font-heading text-lg font-semibold mt-2 mb-2 group-hover:text-primary transition-colors">
