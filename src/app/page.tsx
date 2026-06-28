@@ -394,7 +394,7 @@ function FAQSection() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
-              className={`rounded-2xl transition-all duration-300 border  ${open === i ? "bg-card border-primary/30 shadow-lg shadow-primary/5" : "bg-transparent border-border hover:border-primary/30 "} bg-red-700 `}
+              className={`rounded-2xl transition-all duration-300 border  ${open === i ? "bg-card border-primary/30 shadow-lg shadow-primary/5" : "bg-transparent border-border hover:border-primary/30 "}  `}
             >
               <button
                 onClick={() => setOpen(open === i ? 0 : i)}
