@@ -50,7 +50,7 @@ if (error) {
         <div className="container-narrow">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post, i) => (
-  <Link key={post.slug} href={`/blog/${post.slug}`}>
+  <Link key={post.slug} href={`/blog/${post.id}`}>
     <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -69,7 +69,7 @@ if (error) {
 
       <div className="p-6">
         <span className="text-primary text-xs font-medium uppercase tracking-widest">
-          {post.category}
+          {post.category.name}
         </span>
 
         <h3 className="font-heading text-lg font-semibold mt-2 mb-2 group-hover:text-primary transition-colors">
