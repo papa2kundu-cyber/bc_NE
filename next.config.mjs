@@ -9,6 +9,13 @@ const nextConfig = {
         hostname: 'brightocityinterior.com',
         port: '',
         pathname: '/backend/storage/**',
+      },{
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i.ytimg.com",
       },
     ],
   },

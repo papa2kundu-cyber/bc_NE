@@ -34,6 +34,10 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import { ratingService } from "@/services";
 import { seedReviews } from "@/lib/adminStore";
+import { getFaqs } from "./service/faq";
+import { getVerifiedReviews } from "./service/review";
+import { getImages } from "./service/image";
+
 // import { metadataMap } from "./layout";
 const lineGrow = "/images/lineGrow.svg";
 
@@ -144,14 +148,14 @@ const whyChooseReasons = [
   },
 ];
 
-const galleryImages = [
-  { img: "/images/interior-bedroom.jpg", title: "Serene Bedroom Suite" },
-  { img: "/images/interior-kitchen.jpg", title: "Modern Kitchen" },
-  { img: "/images/interior-bathroom.jpg", title: "Spa Bathroom" },
-  { img: "/images/hero-living.jpg", title: "Open Living Space" },
-  { img: "/images/interior-office.jpg", title: "Home Office" },
-  { img: "/images/about-team.jpg", title: "Design Studio" },
-];
+// const galleryImages = [
+//   { img: "/images/interior-bedroom.jpg", title: "Serene Bedroom Suite" },
+//   { img: "/images/interior-kitchen.jpg", title: "Modern Kitchen" },
+//   { img: "/images/interior-bathroom.jpg", title: "Spa Bathroom" },
+//   { img: "/images/hero-living.jpg", title: "Open Living Space" },
+//   { img: "/images/interior-office.jpg", title: "Home Office" },
+//   { img: "/images/about-team.jpg", title: "Design Studio" },
+// ];
 
 const workProcess = [
   {
@@ -273,19 +277,36 @@ function VideoSection() {
   );
 }
 
+interface Image {
+  id: number;
+  title: string;
+  url: string;
+}
 function GallerySlider() {
   const [current, setCurrent] = useState(0);
+    const { data: galleryImages = [], isLoading } = useQuery<Image[]>({
+    queryKey: ["gallery-images"],
+    queryFn: getImages,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const prev = () =>
     setCurrent((c) => (c === 0 ? galleryImages.length - 1 : c - 1));
   const next = () =>
     setCurrent((c) => (c === galleryImages.length - 1 ? 0 : c + 1));
 
-  useEffect(() => {
-    const t = setInterval(next, 5000);
-    return () => clearInterval(t);
-  });
+ useEffect(() => {
+  if (galleryImages.length <= 1) return;
 
+  const t = setInterval(() => {
+    setCurrent((c) => (c === galleryImages.length - 1 ? 0 : c + 1));
+  }, 5000);
+
+  return () => clearInterval(t);
+}, [galleryImages.length]);
+  if (isLoading) return null;
+
+if (!galleryImages.length) return null;
   return (
     <section className="py-24 bg-foreground relative overflow-hidden text-background">
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent pointer-events-none" />
@@ -303,7 +324,7 @@ function GallerySlider() {
           <div className="relative overflow-hidden rounded-2xl aspect-[16/10] lg:aspect-[16/7] shadow-2xl bg-muted z-10 group">
             <AnimatePresence mode="wait">
               <motion.div
-                key={current}
+                key={galleryImages[current]?.id}
                 initial={{ opacity: 0, scale: 1.05 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
@@ -311,7 +332,7 @@ function GallerySlider() {
                 className="absolute inset-0"
               >
                 <Image
-                  src={galleryImages[current].img}
+                  src={galleryImages[current].url}
                   alt={galleryImages[current].title}
                   fill
                   className="object-cover transition-transform duration-1000 group-hover:scale-105"
@@ -324,12 +345,12 @@ function GallerySlider() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3, duration: 0.5 }}
                   >
-                    <div className="flex items-center gap-3 mb-3">
+                    {/* <div className="flex items-center gap-3 mb-3">
                       <span className="w-8 h-px bg-primary/80" />
                       <span className="text-primary font-medium tracking-widest text-xs uppercase">
                         Project {String(current + 1).padStart(2, "0")}
                       </span>
-                    </div>
+                    </div> */}
                     <h3 className="font-heading text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-md">
                       {galleryImages[current].title}
                     </h3>
@@ -374,9 +395,18 @@ function GallerySlider() {
     </section>
   );
 }
+type Faq = {
+  q: string;
+  a: string;
+};
 
+interface Faqs extends Array<Faq> {}
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(0);
+  const { data: faqs = [] } = useQuery<Faqs>({
+    queryKey: ["faqs"],
+    queryFn: getFaqs,
+  });
   return (
     <section className="py-24 relative bg-background">
       <div className="container-narrow max-w-3xl relative z-10">
@@ -563,18 +593,21 @@ const Counter = ({ endValue, color }: any) => {
 // ─── Reviews Carousel ─────────────────────────────────────────────────────────
 
 function ReviewsCarousel() {
+    console.log("ReviewsCarousel rendered");
+
   const { data: apiReviews } = useQuery({
-    queryKey: ["approved-ratings"],
-    queryFn: ratingService.getAllApprovedRatings,
+    queryKey: ["ratings"],
+    queryFn: getVerifiedReviews,
     staleTime: 5 * 60 * 1000,
   });
-
+  console.log("api dev",apiReviews)
+ 
   const reviews = (
     apiReviews && apiReviews.length > 0
       ? apiReviews
       : seedReviews.filter((r) => r.allowed)
   ) as Array<{
-    id: string | number;
+    id:  number;
     name: string;
     rating?: number;
     description?: string;
@@ -928,7 +961,7 @@ const pdfSections = [
 
 function PDFSectionsRenderer() {
   return (
-    <div className="flex flex-col gap-24 pb-24 bg-background relative overflow-hidden">
+    <div className="flex flex-col gap-12 pb-24 bg-background relative overflow-hidden">
       <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent hidden lg:block -translate-x-1/2" />
 
       {/* 2) ABOUT US */}
@@ -936,7 +969,7 @@ function PDFSectionsRenderer() {
         <div className="w-full h-full bg-[#ffffffc8] absolute" />
         <section className="section-padding bg-muted/30 relative z-10">
           <div className="container-narrow">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
               <motion.div
                 initial={{ opacity: 0, x: -40 }}
                 whileInView={{ opacity: 1, x: 0 }}
