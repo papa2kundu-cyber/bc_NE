@@ -119,10 +119,10 @@ const expertiseItems = [
 ];
 
 const whyChooseUs = [
-  { num: "250+", label: "Projects Completed" },
-  { num: "15+", label: "Years Experience" },
-  { num: "120+", label: "Happy Clients" },
-  { num: "18", label: "Design Awards" },
+  { num: "80+", label: "Projects Completed" },
+  { num: "6+", label: "Years Experience" },
+  { num: "60+", label: "Happy Clients" },
+  { num: "50+", label: "Design Awards" },
 ];
 
 const whyChooseReasons = [
@@ -1004,8 +1004,8 @@ function PDFSectionsRenderer() {
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-4">
                   At Brightocity Interior, we believe that great design is the
-                  art of bringing harmony to a space. Founded in 2008, we have
-                  spent over 15 years creating homes and commercial environments
+                  art of bringing harmony to a space. Founded in 2020, we have
+                  spent over 6 years creating homes and commercial environments
                   that inspire, comfort, and endure.
                 </p>
                 <p className="text-muted-foreground leading-relaxed mb-6">
@@ -1017,10 +1017,10 @@ function PDFSectionsRenderer() {
                 </p>
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   {[
-                    { num: "250+", label: "Projects Done" },
-                    { num: "120+", label: "Happy Clients" },
-                    { num: "18", label: "Awards Won" },
-                    { num: "15+", label: "Years Experience" },
+                    { num: "80+", label: "Projects Done" },
+                    { num: "60+", label: "Happy Clients" },
+                    { num: "50+", label: "Awards Won" },
+                    { num: "6+", label: "Years Experience" },
                   ].map((s) => (
                     <div
                       key={s.label}

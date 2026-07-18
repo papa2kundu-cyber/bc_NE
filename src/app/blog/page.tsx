@@ -76,9 +76,12 @@ if (error) {
           {post.title}
         </h3>
 
-        <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-          {post.excerpt}
-        </p>
+      <p
+  className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-3"
+  dangerouslySetInnerHTML={{
+    __html: post.excerpt,
+  }}
+/>
 
         <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
